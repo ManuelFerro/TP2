@@ -13,9 +13,9 @@ con materias_c: Dicc<nombreMateria (String), Materia>
 
 Clase Materia
 
-Estudiantes_m: Seq<LU (String)>
-nombresMateria: Dicc<nombreMateria (String), materias_c>
-Plantel: Plantel
+	Estudiantes_m: Seq<LU (String)>
+	nombresMateria: Dicc<nombreMateria (String), materias_c>
+	Plantel: Plantel
 
 Clase Plantel
 	
@@ -23,6 +23,7 @@ Clase Plantel
 	Cupo: int = Docentes[0] *250 + Docentes[1] *100 + Docentes[2] *20 + Docentes[3] *30
 
 ----------------------------------------------------------------------------------------------------------------
+
 1)
 Nuevo sistema (in infoMaterias, in libretasUniversitarias): sistemaSIU
 
@@ -47,6 +48,7 @@ Por cada LU en libretas universitarias:
 	Estudiantes.Definir(LU,0)
 
 *materia vacía tiene Estudiantes seq<>, nombresMateria: dicc vacío y plantel un Plantel vacío: Docentes <0, 0, 0, 0>, por lo que cupo = 0.
+
 2)
 inscribir (inout sistema, in estudiante, in carrera , in nombreMateria)
 
