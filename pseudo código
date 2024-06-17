@@ -1,0 +1,137 @@
+TP2: pseudocódigo (entrega de mitad de tp)
+
+#:= cantidad.
+
+Clase Siu Guarani
+
+	Estudiantes: Dicc<LU (String), #materias inscriptas (int)>
+	Carreras: Dicc<String (carrera), materias_c>
+	MateriasPorCarrera: seq<materias_c>
+
+con materias_c: Dicc<nombreMateria (String), Materia>
+(Materias es una cola implementada en lista doblemente enlazada; permite acceso al último elemento en O(1); hay tantas materias_c como carreras haya)
+
+Clase Materia
+
+Estudiantes_m: Seq<LU (String)>
+nombresMateria: Dicc<nombreMateria (String), materias_c>
+Plantel: Plantel
+
+Clase Plantel
+	
+	Docentes: <AY2, AY1, JTP, Prof> (cada uno un int).
+	Cupo: int = Docentes[0] *250 + Docentes[1] *100 + Docentes[2] *20 + Docentes[3] *30
+
+----------------------------------------------------------------------------------------------------------------
+1)
+Nuevo sistema (in infoMaterias, in libretasUniversitarias): sistemaSIU
+
+Por cada InfoMateria en InfoMaterias y por cada ParCarrearaMateria en InfoMateria:
+	si ParCarreraMateria[0] no está definido en Carreras:
+		creo materias_c un dicc vacío y lo añado a la lista MateriasPorCarrera
+		carreras.definir(parCarreraMateria[0], materias_c)
+
+	sino:
+		carreras.definir(parCarreraMateria[0], materias_c)
+
+	solo si estoy en el 1ero elemento de InfoMateria:
+		creo una materia vacía*
+
+	nombresMateria.Definir(parCarreraMateria[1], materias_c)
+	MateriasC.Definir(parCarreraMateria[1], Materia)
+
+Por cada LU en libretas universitarias:
+	solo si estoy en el 1er elemento:
+		creo Estudiantes un dicc vacío
+
+	Estudiantes.Definir(LU,0)
+
+*materia vacía tiene Estudiantes seq<>, nombresMateria: dicc vacío y plantel un Plantel vacío: Docentes <0, 0, 0, 0>, por lo que cupo = 0.
+2)
+inscribir (inout sistema, in estudiante, in carrera , in nombreMateria)
+
+sistema.Estudiantes.BuscarODefinir*(estudiante, valor +1)
+
+Busco carrera en Carreras, luego NombreMateria en materias_c, obtengo el valor Materia
+Materia.Estudiantes + estudiante
+
+*BuscarODefinir: Si pertenece, redefine el valor. Sino, la clave.
+
+
+3)
+Inscriptos (in Sistema. In carrera, in NombreMateria) : N
+
+en sistema.carreras busco carrera, obtengo  materias_c
+
+en MateriasC busco nombreMateria, obtengo Materia
+
+Res es Materia.estudiantes.longitud()
+
+
+4)
+AgregarDocente ( inout sistema, in cargo : int , in carrera, in nombreMateria)
+
+en sistema.carreras busco carrera, obtengo materias_c, allí busco nombreMateria, obtengo Materia
+
+en Materia.Plantel, docentes[cargo]++1 (se recalcula el cupo) 
+
+
+5)
+PlantelDocente (in sistema, in carreram in nombreMateria) : seq N
+
+en sistema.carreras busco carrera, obtengo materias_c, allí busco nombreMateria, obtengo Materia
+
+Res es materia.Plantel
+
+
+6)
+Excede cupoi (in sistema, in carrera, in nombreMateria) : Bool
+
+en sistema.carreras busco carrera, obtengo materias_c, allí busco nombreMateria, obtengo Materia
+
+res es (Materia.Plantel.Docente.Longitud()  > Materia.Plantel.Cupo)
+
+
+7) 
+Carreras ( in sistema) : Seq <String>
+la variable res es una secuencia vacía de strings 
+
+recorro sistema.Carreras, cada vez que encuentro un significado agrego la clave (un string) a res
+
+la respuesta es res
+
+(De recorrerse de esta forma, el dicc ya se encuentra ordenado lexicográficamente).
+
+8)
+Materias (in sistema, in carrera) : seq<String>
+
+res es una seq<String> vacía
+
+en sistema.carreras busco carrera, obtengo  materias_c
+
+recorro materias_c, cada que encuentro un significado
+
+agrego la clave a res
+
+la respuesta es res
+
+
+9) Materias Inscriptas (in sistema, un estudiante) : N
+
+en sistema.Estudiantes busco estudiante, obtengo #materiasInscripto
+
+devuelvo #materiasInscripto como respuesta
+
+
+10) Cerrar Materia ( inout sistema, in carrera, in nombreMateria)
+
+en sistema.Carreras busco carrera, obtengo materias_c, allí busco nombreMateria, obtengo Materia
+
+recorro Materia.nombresMateria,
+	por cada significado <clave, valor>
+
+	pido su valor (materias_c) y ejecuto materias_c.eliminar(clave)
+
+
+				
+
