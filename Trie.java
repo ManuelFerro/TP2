@@ -1,26 +1,20 @@
 package aed;
-public class Trie {
+public class Trie<T> {
 
     private Nodo raiz; // el único atributo es el nodo, pero dentro implementamos la estructura del Trie
 
     // clase interna Nodo, lo implementamos con atributos que permiten desarrollar la estructura de un Trie
     private class Nodo {
 
-        private char c; // carácter almacenado en el nodo
-        private boolean esPalabra; // indica si es el final de una palabra
+        private T significado; // el significado almacenado en el nodo (si hay uno)
         private Nodo[] hijos; // arreglo de nodos hijos
+        private Nodo ancestro;
 
         // constructor del nodo vacío
         private Nodo() {
             this.hijos = new Nodo[256]; // arma un arreglo de Nodos de 256 espacios, uno por cada caracter ASCII
-        }
-
-        // constructor partiendo de un caracter
-        private Nodo(char c) {
-
-            this.c = c; // guarda c como el caracter almacenado
-            esPalabra = false; // inicializa esPalabra como falso
-            hijos = new Nodo[256]; // arma un arreglo de Nodos de 256 espacios, uno por cada caracter ASCII
+            this.significado = null;
+            this.ancestro = null;
         }
     }
 
@@ -29,9 +23,10 @@ public class Trie {
         raiz = new Nodo(); // inicializa la raíz del trie
     }
 
-    // método para insertar una palabra
+    // método para definir una palabra.
+    // nota: si se pasa una palabra que ya estaba guardada, se la redefine
 
-    public void insertar(String palabra) {
+    public void definir(String palabra, T valor) {
 
         Nodo actual = raiz;
         int indice = 0;
@@ -42,24 +37,48 @@ public class Trie {
             int valorASCII = c; // convierte el carácter a su valor ASCII
             
             if (actual.hijos[valorASCII] == null) { // si no hay nodo hijo para el carácter
-                actual.hijos[valorASCII] = new Nodo(c); // crea un nuevo nodo
+
+                Nodo nodoNuevo = new Nodo(); // crea un nuevo nodo
+                nodoNuevo.ancestro = actual;
+                actual.hijos[valorASCII] = nodoNuevo;
             }
             actual = actual.hijos[valorASCII]; // avanza al siguiente nodo
             indice++;
         }
-        actual.esPalabra = true; // marca el final de la palabra
+        actual.significado = valor; // define el significado como el valor
     }
 
-    // método para buscar una palabra, usa un método auxiliar
+    // método para saber si una palabra pertenece
 
-    public boolean buscar(String palabra) {
+    public boolean pertenece(String palabra) {
 
-        Nodo nodo = nodoFinal(palabra); // obtiene el nodo final de la palabra
+        Nodo actual = raiz;
+        int indice = 0;
 
-        return nodo != null && nodo.esPalabra; // devuelve verdadero si el nodo es el final de una palabra
+        while ( indice < palabra.length() ) { // recorre cada carácter de la palabra
+
+            char c = palabra.charAt(indice); // obtiene el carácter actual
+            int valorASCII = c; // convierte el carácter a su valor ASCII
+            
+            if (actual.hijos[valorASCII] == null) { // si no hay nodo hijo para el carácter
+                return false; // no está definido el resto de la palabra
+            }
+            actual = actual.hijos[valorASCII]; // avanza al siguiente nodo
+            indice++;
+        }
+        if (actual.significado == null) {
+            return false;            
+        }
+        else {
+            return true;
+        }
+    }
+    
+    public T obtener(String palabra) {
+        return nodoFinal(palabra).significado; // devuelve el significado del nodo final
     }
 
-    public Nodo nodoFinal(String palabra) {
+    private Nodo nodoFinal(String palabra) {
 
         Nodo actual = raiz;
         int indice = 0;
@@ -69,54 +88,71 @@ public class Trie {
             char c = palabra.charAt(indice); // obtiene el carácter actual
             int valorASCII = c; // convierte el carácter a su valor ASCII
 
-            if (actual.hijos[valorASCII] == null) { // si no hay nodo hijo para el carácter
-                return null;
-            }
             actual = actual.hijos[valorASCII]; // avanza al siguiente nodo
             indice ++;
         }
-        return actual; // devuelve el nodo final
+
+        return actual;
     }
 
-    public boolean empiezaCon(String prefijo) {
-        return nodoFinal(prefijo) != null; // devuelve verdadero si existe un nodo final para el prefijo
-    }
-
-    // método para eliminar una palabra del trie, usa un auxiliar recursivo
+    // método para eliminar una palabra del trie
 
     public void eliminar(String palabra) {
-        eliminarRecursivo(raiz, palabra, 0);
-    }
 
-    private void eliminarRecursivo(Nodo actual, String palabra, int indice) {
+        Nodo actual = nodoFinal(palabra); // busca el nodo al que le quieor borrar el significado
+        int indice = 0;
+        int borrados = 0;
 
-        if (indice == palabra.length()) {
-            if (actual.esPalabra) {
-                actual.esPalabra = false; // desmarcar el nodo como fin de palabra
+        if (cantidadHijos(actual) == 0) { // si el nodo no tiene hijos
+
+            while ( (indice < palabra.length()) && (borrados < 1) ) { // sube por el Trie buscando su primer ancestro con más de 1 hijo
+                actual = actual.ancestro; // sube 1 por el Trie
+                indice ++;
+
+                if (cantidadHijos(actual) > 1) { // cuando lo encuentre
+
+                    char c = palabra.charAt(palabra.length() - indice); // obtiene el caracter del nodo actual
+                    int valorASCII = c; // convierte el carácter a su valor ASCII
+
+                    actual.hijos[valorASCII] = null; // corta la rama de donde venía
+                    borrados ++; // cuenta cuántos se borraros, evita que se borren varios significados
+                }
+            }
+            if (borrados < 1) { // si sale del while entonces ya está en la raíz
+
+                char c = palabra.charAt(palabra.length() - indice); // obtiene el carácter actual
+                int valorASCII = c; // convierte el carácter a su valor ASCII
+
+                actual.hijos[valorASCII] = null; // corta la rama a borrar
+                borrados ++;
             }
         }
-        
-        char c = palabra.charAt(indice);
-        int valorASCII = c;
-        Nodo nodo = actual.hijos[valorASCII];
-
-        eliminarRecursivo(nodo, palabra, indice + 1);
-
-        if (!nodo.esPalabra && noTieneHijos(nodo)) {// después de la llamada recursiva chequeamos que el nodo hijo se pueda eliminar
-            actual.hijos[valorASCII] = null; // elimina la referencia al nodo hijo
+        else { // si el nodo a borrar tiene hijos
+            if (borrados < 1) { // podría haber borrado el significado del nodo donde había terminado la variable actual, con la guarda evito esto
+                actual.significado = null;
+            }
         }
     }
 
-    private boolean noTieneHijos(Nodo nodo) {
+    private int cantidadHijos(Nodo nodo) {
         int i = 0;
+        int res = 0;
 
         while ( i < nodo.hijos.length ) {
             if (nodo.hijos[i] != null) {
-                return false;
+                res ++;
             }
             i ++;
         }
-        return true;
+        return res;
+    }
+
+    public ListaEnlazada<String> recorrer(){
+        Nodo actual = raiz;
+        int indice = 0;
+        ListaEnlazada<String> res = null;
+
+        return res;
     }
 }
 
