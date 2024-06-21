@@ -43,7 +43,7 @@ Por cada InfoMateria en InfoMaterias y por cada ParCarrearaMateria en InfoMateri
 	solo si estoy en el 1ero elemento de InfoMateria:
 		creo una materia vacía*
 
-	nombresMateria.Definir(parCarreraMateria[1], materias_c)
+	Materia.nombresMateria.Definir(parCarreraMateria[1], materias_c)
 	materias_c.Definir(parCarreraMateria[1], Materia)
 
 Por cada LU en libretas universitarias:
