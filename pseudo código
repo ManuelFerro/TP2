@@ -4,7 +4,7 @@ TP2: pseudocódigo (entrega de mitad de tp)
 
 Clase Siu Guarani
 
-	Estudiantes: Dicc<LU (String), #materias inscriptas (int)>
+	Estudiantes: Dicc<LU (String), #materias inscriptas (integer)>
 	Carreras: Dicc<String (carrera), materias_c>
 	MateriasPorCarrera: seq<materias_c>
 
@@ -24,6 +24,11 @@ Clase Plantel
 
 ----------------------------------------------------------------------------------------------------------------
 
+infoMaterias = InfoMateria[]
+InfoMateria = ParCarreraMateria[]
+ParCarreraMateria = < carrera (string), materia (string)>
+libretasUniversitarias = String[]
+
 1)
 Nuevo sistema (in infoMaterias, in libretasUniversitarias): sistemaSIU
 
@@ -39,7 +44,7 @@ Por cada InfoMateria en InfoMaterias y por cada ParCarrearaMateria en InfoMateri
 		creo una materia vacía*
 
 	nombresMateria.Definir(parCarreraMateria[1], materias_c)
-	MateriasC.Definir(parCarreraMateria[1], Materia)
+	materias_c.Definir(parCarreraMateria[1], Materia)
 
 Por cada LU en libretas universitarias:
 	solo si estoy en el 1er elemento:
