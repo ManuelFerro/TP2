@@ -12,9 +12,9 @@ public class Trie<T> {
 
         // constructor del nodo vacío
         private Nodo() {
-            this.hijos = new Nodo[256]; // arma un arreglo de Nodos de 256 espacios, uno por cada caracter ASCII
-            this.significado = null;
-            this.ancestro = null;
+            hijos = new Trie.Nodo[256]; // arma un arreglo de Nodos de 256 espacios, uno por cada caracter ASCII
+            significado = null;
+            ancestro = null;
         }
     }
 
@@ -148,9 +148,44 @@ public class Trie<T> {
     }
 
     public ListaEnlazada<String> recorrer(){
-        Nodo actual = raiz;
-        int indice = 0;
-        ListaEnlazada<String> res = null;
+
+        ListaEnlazada<String> res = new ListaEnlazada<>(); // inicializa la respuesta, luego se irá completando
+        Nodo actual = raiz; // arranca desde la raiz
+        int indice = 0; // indica en qué hijo está
+        String anotador = ""; // donde se iran anotando las letras
+
+        while (indice < 257) { // recorre los 256 hijos en orden, + 1 caso si no encuentra hijos
+
+            if (actual.hijos[indice] != null) { // si encuentra un hijo no vacio
+
+                actual = actual.hijos[indice]; // baja en el Trie
+                char c = (char) indice; // toma el caracter correspondiente al nodo actual
+                indice = -1; // resetea el indice para recorrer los hijos del nuevo nodo desde -1 (al final del while le sumo 1 y empieza desde 0 en el próximo)
+
+                StringBuffer sb = new StringBuffer(anotador); // inicia un stringBuffer que permite modificar el anotador
+                sb.append(c); // anota una letra
+                anotador = sb.toString(); // iguala el anotaror al String modificado
+
+                if (actual.significado != null) { // si cuando baja encuentra un significado
+                    res.agregarAtras(anotador); // añade lo anotado a res
+                }
+            }
+            if (indice == 256) { // no encuentra hijo no nulo
+
+                if (actual.ancestro != null) { // si no es la raiz
+
+                    actual = actual.ancestro; // sube en el Trie
+                    char c = anotador.charAt(anotador.length() - 2); // obtiene la anteúltima letra
+                    indice = c; // iguala el indice al valor ASCII de c, asi sigue recorriendo desde donde se había quedado en el nodo anterior
+
+                    StringBuffer sb = new StringBuffer(anotador); // inicia un stringBuffer que permite modificar un String
+                    sb.deleteCharAt(sb.length() - 1); // le borra una letra
+                    anotador = sb.toString(); // iguala el anotaror al String modificado
+                }
+            }
+            
+            indice ++;
+        }
 
         return res;
     }
