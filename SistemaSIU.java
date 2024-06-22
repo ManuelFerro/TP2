@@ -2,9 +2,13 @@ package aed;
 
 public class SistemaSIU {
 
-    private Trie<Integer> estudiantes; // el diccionario con todos,los estudiantes. el tipo pasado no puede ser primitivo en tipos genéricos, por ello se usó Integer
-    private Trie<materias_c> carreras;
-    private ListaEnlazada<materias_c> materiasPorCarrera;
+    private Trie<Integer> estudiantes; // el diccionario con todos los estudiantes y la cantidad de materias donde se han inscripto
+
+    private Trie<materias_c> carreras; // el diccionario con los nombres de todas las carreras y sus materias
+
+    private ListaEnlazada<materias_c> materiasPorCarrera; // la lista con todos los grupos de materias por carrera
+
+    // sobre el uso de Integer y no int en estudiantes: el tipo pasado no puede ser primitivo en tipos genéricos, por ello se usó Integer
 
     // constructor del SistemaSIU vacio
     public SistemaSIU(){
@@ -14,6 +18,8 @@ public class SistemaSIU {
     }
 
     // clase materias_c, funge como reemplazo sintáctico
+    // representa el diccionario de los nombres de las materias de una carrera, con la materia a la que se refieren como valor 
+
     public class materias_c {
         Trie<Materia> dato;
 
@@ -26,7 +32,7 @@ public class SistemaSIU {
     enum CargoDocente{
         AY2, // ayudante de segunda
         AY1, // ayudante de primera
-        JTP, // Jefe de trabajo práctico
+        JTP, // jefe de trabajo práctico
         PROF // profesor
     }
 
@@ -35,7 +41,11 @@ public class SistemaSIU {
     }
 
     public void inscribir(String estudiante, String carrera, String materia){
-        throw new UnsupportedOperationException("Método no implementado aún");
+
+        Integer cantidadMateriasInscripto = estudiantes.obtener(estudiante);
+        estudiantes.definir(materia, cantidadMateriasInscripto + 1); // sumo 1 en el valor que contaviliza
+
+        ;
     }
 
     public void agregarDocente(CargoDocente cargo, String carrera, String materia){
