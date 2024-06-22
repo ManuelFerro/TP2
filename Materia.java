@@ -12,5 +12,17 @@ public class Materia {
         nombresMateria = new Trie<materias_c>();
         plantel = new Plantel(0, 0, 0, 0);
     }
+
+    public ListaEnlazada<String> estudiantesAnotados(){
+        return estudiantesAnotados;
+    }
+
+    public Trie<materias_c> nombresMateria(){
+        return nombresMateria;
+    }
+
+    public Plantel plantel(){
+        return plantel;
+    }
 }
 
