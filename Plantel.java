@@ -14,6 +14,10 @@ public class Plantel {
         docentes[3] = cantidadProf; // profesores
     }
 
+    public int[] docentes(){
+        return docentes;
+    }
+
     // método para calcular el cupo
     public int cupo() {
         return (docentes[0] * 30) + (docentes[1] * 20) + (docentes[2] * 100) + (docentes[3] * 250);
