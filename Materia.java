@@ -1,5 +1,5 @@
 package aed;
-import aed.SistemaSIU.materias_c;
+import aed.SistemaSIU.conjuntoMaterias;
 
 // clase Materia. Abstrae el concepto d euna materia de la facultad, con
 // su plantel docente (que define su cupo), los alumnos inscriptos a la misma y
@@ -7,13 +7,13 @@ import aed.SistemaSIU.materias_c;
 
 public class Materia {
     private ListaEnlazada<String> estudiantesAnotados;
-    private Trie<materias_c> nombresMateria; // sus valores son materias_c, un diccionario que representa el conjunto de materias de una carrera
+    private Trie<conjuntoMaterias> nombresMateria; // sus valores son conjuntoMaterias, un diccionario que representa el conjunto de materias de una carrera
     private Plantel plantel;
 
     // constructor de Materia vacía
     public Materia(){
         estudiantesAnotados = new ListaEnlazada<>();
-        nombresMateria = new Trie<materias_c>();
+        nombresMateria = new Trie<conjuntoMaterias>();
         plantel = new Plantel(0, 0, 0, 0);
     }
 
@@ -21,7 +21,7 @@ public class Materia {
         return estudiantesAnotados;
     }
 
-    public Trie<materias_c> nombresMateria(){
+    public Trie<conjuntoMaterias> nombresMateria(){
         return nombresMateria;
     }
 
