@@ -4,27 +4,27 @@ public class SistemaSIU {
 
     private Trie<Integer> estudiantes; // el diccionario con todos los estudiantes y la cantidad de materias donde se han inscripto
 
-    private Trie<materias_c> carreras; // el diccionario con los nombres de todas las carreras y sus materias
+    private Trie<conjuntoMaterias> carreras; // el diccionario con los nombres de todas las carreras y sus materias
 
-    private ListaEnlazada<materias_c> materiasPorCarrera; // la lista con todos los grupos de materias por carrera
+    private ListaEnlazada<conjuntoMaterias> materiasPorCarrera; // la lista con todos los grupos de materias por carrera
 
     // sobre el uso de Integer y no int en estudiantes: el tipo pasado no puede ser primitivo en tipos genéricos, por ello se usó Integer
 
     // constructor del SistemaSIU vacio
     public SistemaSIU(){
         estudiantes = new Trie<Integer>();
-        carreras = new Trie<materias_c>();
-        materiasPorCarrera = new ListaEnlazada<materias_c>();
+        carreras = new Trie<conjuntoMaterias>();
+        materiasPorCarrera = new ListaEnlazada<conjuntoMaterias>();
     }
 
-    // clase materias_c, funge como reemplazo sintáctico
-    // representa el diccionario de los nombres de las materias de una carrera, con la materia a la que se refieren como valor 
+    // clase conjuntoMaterias, funge como reemplazo sintáctico
+    // representa el cjnto de los nombres de las materias de una carrera, con la materia a la que se refieren como valor, reepresentados como un diccionario 
 
-    public class materias_c {
+    public class conjuntoMaterias {
         Trie<Materia> dato;
 
-        // constructor de materias_c vacía
-        private materias_c() {
+        // constructor de conjuntoMaterias vacía
+        private conjuntoMaterias() {
             dato = new Trie<Materia>();
         }
     }
@@ -37,7 +37,27 @@ public class SistemaSIU {
     }
 
     public SistemaSIU(InfoMateria[] infoMaterias, String[] libretasUniversitarias){
-        throw new UnsupportedOperationException("Método no implementado aún");	    
+
+        for (int i = 0; i < infoMaterias.length; i++) { // por cada infoMateria en infoMaterias
+
+            InfoMateria infoMateria = infoMaterias[i]; // obtengo infoMateria
+            ParCarreraMateria[] paresCarreraMateria = infoMateria.getParesCarreraMateria();
+            int longitud = paresCarreraMateria.length;
+
+            for (int j = 0; j < longitud; j++) { // por cada parCarreraMateria en infoMateria;
+
+                ParCarreraMateria parCarreraMateria = paresCarreraMateria[j]; // obtengo parCarreraMateria
+                
+                String carrera = parCarreraMateria.carrera;
+                String materia = parCarreraMateria.nombreMateria;
+
+                boolean carreraAunNoDefinida = !(carreras.pertenece(carrera));
+
+                if ( carreraAunNoDefinida ) {
+                    conjuntoMaterias materiasDeC = new conjuntoMaterias();
+                }
+            }
+        }    
     }
 
     public void inscribir(String estudiante, String carrera, String materia){
