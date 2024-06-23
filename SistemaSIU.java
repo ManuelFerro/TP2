@@ -44,9 +44,12 @@ public class SistemaSIU {
 
         for (int i = 0; i < infoMaterias.length; i++) { // por cada infoMateria en infoMaterias
 
+            Materia nuevaMateria = new Materia(); // creo una nueva Materia vacía y la guardo en una variable interna "nuevaMateria"
+            // notar que cada vez que itere sobre infoMaterias, la variable pasará a guardar una nueva Materia vacía
+
             InfoMateria infoMateria = infoMaterias[i]; // obtengo infoMateria
-            ParCarreraMateria[] paresCarreraMateria = infoMateria.getParesCarreraMateria();
-            int longitud = paresCarreraMateria.length;
+            ParCarreraMateria[] paresCarreraMateria = infoMateria.getParesCarreraMateria(); // extraigo los pares carrera-materia
+            int longitud = paresCarreraMateria.length; // obtengo la cantidad de pares carrera-materia que tiene
 
             for (int j = 0; j < longitud; j++) { // por cada parCarreraMateria en infoMateria;
 
@@ -60,27 +63,22 @@ public class SistemaSIU {
                 if ( carreraAunNoDefinida ) { // si carrera aún no está definida en carreras
 
                     conjuntoMaterias materiasDeC = new conjuntoMaterias(); // creo un nuevo conjunto de materias
-                    carreras.definir(carrera, materiasDeC); // en el dicc de carreras defino la clave carrera, que tiene por valor el conjunto de materias nuevo
+                    carreras.definir(carrera, materiasDeC); // en el dicc de carreras defino la tupla clave-valor (carrera, nuevo conjunto de materias)
                 }
 
                 conjuntoMaterias materiasDeC = carreras.obtener(carrera); // obtengo el conjunto de materias de la carrera
-                
-                boolean esPrimero = (j == 0); // una variable booleana que me dice si estoy en el primer elemento de infoMateria,
 
-                if (esPrimero) { // si es la primera vez que defino la materia
+                materiasDeC.dato.definir(nombreMateria, nuevaMateria); // guardo como clave al nombre de la materia, como valor la materia
 
-                    Materia nuevaMateria = new Materia(); // abro una nueva materia
-                    materiasDeC.dato.definir(nombreMateria, nuevaMateria); // guardo como clave al nombre de la materia, como valor la materia
-
-                    Trie<conjuntoMaterias> nombresMateria = nuevaMateria.nombresMateria(); // obtengo los nombres de la materia
-                    nombresMateria.definir(nombreMateria, materiasDeC); // defino la tupla clave-valor (nombre de materia, conjunto de materias de c) en los nombres de la materia
-                }
+                Trie<conjuntoMaterias> nombresMateria = nuevaMateria.nombresMateria(); // obtengo el conjunto de los nombres de la materia
+                nombresMateria.definir(nombreMateria, materiasDeC); // allí defino la tupla clave-valor (nombre de materia, conjunto de materias de c)
             }
         }
-        for (int i = 0; i < libretasUniversitarias.length; i++) {
+        for (int i = 0; i < libretasUniversitarias.length; i++) { // por cada LU
             
-            String LU = libretasUniversitarias[i];
-            estudiantes.definir(LU, 0);
+            String LU = libretasUniversitarias[i]; // obtengo la LU a guardar
+            estudiantes.definir(LU, 0); // guardo la tupla clave valor (LU, cantidad de materias inscripto)
+            // notar que la cantidad de materias inscripto es siempre 0 al iniciar el sistema porque aún nadie se anotó
         }  
     }
 
