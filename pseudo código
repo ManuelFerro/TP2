@@ -34,11 +34,11 @@ Nuevo sistema (in infoMaterias, in libretasUniversitarias): sistemaSIU
 
 Por cada InfoMateria en InfoMaterias y por cada ParCarrearaMateria en InfoMateria:
 	si ParCarreraMateria[0] no está definido en Carreras:
-		creo materias_c un dicc vacío y lo añado a la lista MateriasPorCarrera
+		creo materias_c un dicc vacío
 		carreras.definir(parCarreraMateria[0], materias_c)
 
 	sino:
-		carreras.definir(parCarreraMateria[0], materias_c)
+		carreras.obtener(parCarreraMateria[0], materias_c)
 
 	solo si estoy en el 1ero elemento de InfoMateria:
 		creo una materia vacía*
