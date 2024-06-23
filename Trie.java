@@ -269,6 +269,10 @@ public class Trie<T> {
 
                 if (puntero.hijos[indiceHijosPuntero] != null) { // cuando encuentra un hijo no vacio
 
+                    if (anotador == null) {
+                        String nuevoAnotador = "";
+                        anotador = nuevoAnotador;
+                    }
                     char c = (char) indiceHijosPuntero; // toma el caracter correspondiente al nodo actual
                     StringBuffer sb = new StringBuffer(anotador); // inicia un stringBuffer que permite modificar el anotador
                     sb.append(c); // anota una letra
