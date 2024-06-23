@@ -1,25 +1,28 @@
 package aed;
 
+import aed.SistemaSIU.CargoDocente;
 public class Plantel {
 
     // atributo que representa la cantidad de docentes de cada tipo
     private int[] docentes;
 
     // constructor del plantel con datos de entrada
-    public Plantel(int cantidadAY2, int cantidadAY1, int cantidadJTP, int cantidadProf) {
+    public Plantel() {
         docentes = new int[4];
-        docentes[0] = cantidadAY2; // ayudantes de segunda
-        docentes[1] = cantidadAY1; // ayudantes de primera
-        docentes[2] = cantidadJTP; // jefes de trabajos prácticos
-        docentes[3] = cantidadProf; // profesores
     }
 
-    public int[] docentes(){
-        return docentes;
+    public void agregarDocente(CargoDocente cargo){
+        docentes[cargo.ordinal()] ++;
     }
 
     // método para calcular el cupo
     public int cupo() {
-        return (docentes[0] * 30) + (docentes[1] * 20) + (docentes[2] * 100) + (docentes[3] * 250);
+
+        int cupoAY2 = docentes[CargoDocente.AY2.ordinal()] * 30;
+        int cupoAY1 = docentes[CargoDocente.AY1.ordinal()] * 20;
+        int cupoJTP = docentes[CargoDocente.JTP.ordinal()] * 100;
+        int cupoPROF = docentes[CargoDocente.PROF.ordinal()] * 250;
+
+        return cupoAY2 + cupoAY1 + cupoJTP + cupoPROF;
     }
 }
