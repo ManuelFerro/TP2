@@ -6,15 +6,12 @@ public class SistemaSIU {
 
     private Trie<conjuntoMaterias> carreras; // el diccionario con los nombres de todas las carreras y sus materias
 
-    private Trie<conjuntoMaterias> materiasPorCarrera; // el diccionario con todos los conjuntos de materias por carrera
-
     // sobre el uso de Integer y no int en estudiantes: el tipo pasado no puede ser primitivo en tipos genéricos, por ello se usó Integer
 
     // constructor del SistemaSIU vacio
     public SistemaSIU(){
         estudiantes = new Trie<Integer>();
         carreras = new Trie<conjuntoMaterias>();
-        materiasPorCarrera = new Trie<conjuntoMaterias>();
     }
 
     // clase conjuntoMaterias, funge como reemplazo sintáctico
@@ -111,11 +108,13 @@ public class SistemaSIU {
     }
 
     public String[] carreras(){
-        throw new UnsupportedOperationException("Método no implementado aún");	    
+        return carreras.recorrer();	    
     }
 
     public String[] materias(String carrera){
-        throw new UnsupportedOperationException("Método no implementado aún");	    
+        Trie<Materia> materiasDeC = carreras.obtener(carrera).dato ;
+        
+        return materiasDeC.recorrer();
     }
 
     public int materiasInscriptas(String estudiante){

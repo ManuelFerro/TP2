@@ -1,7 +1,9 @@
 package aed;
+
 public class Trie<T> {
 
     private Nodo raiz; // el único atributo es el nodo, pero dentro implementamos la estructura del Trie
+    private int cantidadSignificados;
 
     // clase interna Nodo, lo implementamos con atributos que permiten desarrollar la estructura de un Trie
     private class Nodo {
@@ -21,6 +23,12 @@ public class Trie<T> {
     // constructor del trie
     public Trie() {
         raiz = new Nodo(); // inicializa la raíz del trie
+        cantidadSignificados = 0;
+    }
+
+    // método para obtener la cantidad de significados
+    public int cantidadSignificados(){
+        return cantidadSignificados;
     }
 
     // método para definir una palabra.
@@ -36,7 +44,8 @@ public class Trie<T> {
             char c = palabra.charAt(indice); // obtiene el carácter actual
             int valorASCII = c; // convierte el carácter a su valor ASCII
             
-            if (actual.hijos[valorASCII] == null) { // si no hay nodo hijo para el carácter
+            if (actual.hijos[valorASCII] == null) { // si no hay nodo hijo para el carácter (implica que antes no estaba definido)
+                cantidadSignificados ++; // suma 1 a la cantidad de significados
 
                 Nodo nodoNuevo = new Nodo(); // crea un nuevo nodo
                 nodoNuevo.ancestro = actual;
@@ -45,7 +54,7 @@ public class Trie<T> {
             actual = actual.hijos[valorASCII]; // avanza al siguiente nodo
             indice++;
         }
-        actual.significado = valor; // define el significado como el valor
+        actual.significado = valor; // define el significado como el valor (lo redefine si la clave ya pertenecía)
     }
 
     // método para saber si una palabra pertenece
@@ -99,7 +108,7 @@ public class Trie<T> {
 
     public void eliminar(String palabra) {
 
-        Nodo actual = nodoFinal(palabra); // busca el nodo al que le quieor borrar el significado
+        Nodo actual = nodoFinal(palabra); // busca el nodo al que se le quiere borrar el significado
         int indice = 0;
         int borrados = 0;
 
@@ -115,7 +124,7 @@ public class Trie<T> {
                     int valorASCII = c; // convierte el carácter a su valor ASCII
 
                     actual.hijos[valorASCII] = null; // corta la rama de donde venía
-                    borrados ++; // cuenta cuántos se borraros, evita que se borren varios significados
+                    borrados ++; // cuenta cuántos se borraron, evita que se borren varios significados
                 }
             }
             if (borrados < 1) { // si sale del while entonces ya está en la raíz
@@ -132,6 +141,7 @@ public class Trie<T> {
                 actual.significado = null;
             }
         }
+        cantidadSignificados --;
     }
 
     private int cantidadHijos(Nodo nodo) {
@@ -147,9 +157,11 @@ public class Trie<T> {
         return res;
     }
 
-    public ListaEnlazada<String> recorrer(){
+    public String[] recorrer(){
 
-        ListaEnlazada<String> res = new ListaEnlazada<>(); // inicializa la respuesta, luego se irá completando
+        String[] res = new String[cantidadSignificados]; // inicializa la respuesta y pide tantos espacios como significados haya. luego se irá completando
+        int posicionDeGuardado = 0; // un int que indicará en qué posición del array respuesta se debe guardar el significado
+
         Nodo actual = raiz; // arranca desde la raiz
         int indice = 0; // indica en qué hijo está
         String anotador = ""; // donde se iran anotando las letras
@@ -167,7 +179,8 @@ public class Trie<T> {
                 anotador = sb.toString(); // iguala el anotaror al String modificado
 
                 if (actual.significado != null) { // si cuando baja encuentra un significado
-                    res.agregarAtras(anotador); // añade lo anotado a res
+                    res[posicionDeGuardado] = anotador; // añade lo anotado a res
+                    posicionDeGuardado ++; // avanza a la siguiente psoción de guardado
                 }
             }
             if (indice == 256) { // no encuentra hijo no nulo

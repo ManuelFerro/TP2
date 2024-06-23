@@ -54,6 +54,33 @@ Por cada LU en libretas universitarias:
 
 *materia vacía tiene Estudiantes seq<>, nombresMateria: dicc vacío y plantel un Plantel vacío: Docentes <0, 0, 0, 0>, por lo que cupo = 0.
 
+justificación de complejidad:
+Iteración sobre infoMaterias: Esto toma O(∣Mc∣), ya que estamos iterando sobre cada par en infoMaterias.
+
+Procesamiento de Cada Par:
+Verificación y Creación de Carreras: Acceder y verificar la existencia de una carrera en el Trie toma O(carrera.length).
+Verificación y Creación de Materias: Acceder y verificar la existencia de una materia en el Trie toma O(nombreMateria.length).
+
+Actualización de nombresMateria: Acceder y modificar el conjunto dentro del diccionario nombresMateria toma
+O(1) si consideramos que las operaciones sobre conjuntos son O(1) en promedio.
+luego queda:
+
+Iteración sobre infoMaterias: O(∣Mc∣)
+Acceso y Actualización del Trie de Carreras: O(∑carrera.length)
+Acceso y Actualización del Trie de Materias: O(∑nombreMateria.length)
+
+en total: O(∑carrera.length×∣Mc∣+∑nombreMateria.length)
+
+Resumen Paso a Paso:
+Leer infoMaterias.
+Crear una instancia del sistema.
+Iterar sobre infoMaterias:
+Para cada infoMateria:
+Descomponer el par <carrera, nombreMateria>.
+Verificar y crear la carrera en el Trie.
+Verificar y crear la materia en el Trie asociado a la carrera.
+Actualizar nombresMateria de la materia con el nombre y la carrera correspondientes.
+
 2)
 inscribir (inout sistema, in estudiante, in carrera , in nombreMateria)
 
