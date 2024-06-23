@@ -14,7 +14,7 @@ public class Materia {
     public Materia(){
         estudiantesAnotados = new ListaEnlazada<>();
         nombresMateria = new Trie<conjuntoMaterias>();
-        plantel = new Plantel(0, 0, 0, 0);
+        plantel = new Plantel();
     }
 
     public ListaEnlazada<String> estudiantesAnotados(){
