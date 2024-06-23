@@ -38,6 +38,8 @@ public class SistemaSIU {
     }
 
     public SistemaSIU(InfoMateria[] infoMaterias, String[] libretasUniversitarias){
+        //Trie<conjuntoMaterias> carreras = this.carreras;
+        //Trie<Integer> estudiantes = this.estudiantes;
 
         for (int i = 0; i < infoMaterias.length; i++) { // por cada infoMateria en infoMaterias
 
@@ -55,9 +57,11 @@ public class SistemaSIU {
                 String carrera = parCarreraMateria.carrera; // obtengo la carrera a modificar o definir
                 String nombreMateria = parCarreraMateria.nombreMateria; // obtengo el nombre de la materia a definir
 
-                boolean carreraAunNoDefinida = !(carreras.pertenece(carrera));
-
-                if ( carreraAunNoDefinida ) { // si carrera aún no está definida en carreras
+                if ((carreras == null)) {
+                    Trie<conjuntoMaterias> nuevasCarreras = new Trie<>();
+                    carreras = nuevasCarreras;
+                }
+                if ( !(carreras.pertenece(carrera)) ) { // si carrera aún no está definida en carreras o carreras es nulo
 
                     conjuntoMaterias materiasDeC = new conjuntoMaterias(); // creo un nuevo conjunto de materias
                     carreras.definir(carrera, materiasDeC); // en el dicc de carreras defino la tupla clave-valor (carrera, nuevo conjunto de materias)
@@ -72,6 +76,11 @@ public class SistemaSIU {
             }
         }
         for (int i = 0; i < libretasUniversitarias.length; i++) { // por cada LU
+
+            if ((estudiantes == null)) {
+                Trie<Integer> nuevosEstudiantes = new Trie<>();
+                estudiantes = nuevosEstudiantes;
+            }
             
             String LU = libretasUniversitarias[i]; // obtengo la LU a guardar
             estudiantes.definir(LU, 0); // guardo la tupla clave valor (LU, cantidad de materias inscripto)
@@ -108,7 +117,7 @@ public class SistemaSIU {
     }
 
     public String[] carreras(){
-        return carreras.recorrer();	    
+        return this.carreras.recorrer();
     }
 
     public String[] materias(String carrera){
@@ -127,41 +136,28 @@ public class SistemaSIU {
 
         Materia materiaACerrar = materiasDeC.dato.obtener(materia); // obtiene la materia a cerrar
 
-        Trie<Materia> nombresMateria = materiaACerrar.nombresMateria().dato; // obtiene el diccionario de los nombres de la materia a cerrar
-
+        Trie<conjuntoMaterias> nombresMateriaACerrar = materiaACerrar.nombresMateria(); // obtiene el diccionario de los nombres de la materia a cerrar
+        int significadosPorBorrar = nombresMateriaACerrar.cantidadSignificados(); 
+        int significadosBorrados = 0;// enteros que representas los significados por borrar y los borrados hasta ahora. Se usarán para un while
 
         // recorre el diccionario de los nombres y va sacandolo de los conjuntos de las carreras a medida que los encuentra
-    
-        Nodo actual = nombresMateria.raiz(); // arranca a recorrer desde la raiz
-        int indice = 0; // indica en qué hijo está
-    
-        while (indice < 257) { // recorre los 256 hijos en orden, + 1 caso si no encuentra hijos
-    
-            if (actual.hijos[indice] != null) { // si encuentra un hijo no vacio
-    
-                actual = actual.hijos[indice]; // baja en el Trie
-                indice = -1; // resetea el indice para recorrer los hijos del nuevo nodo desde -1 (al final del while le sumo 1 y empieza desde 0 en el próximo)
-    
-                if (actual.significado != null) { // si cuando baja encuentra un significado
-                    res[posicionDeGuardado] = anotador; // añade lo anotado a res
-                    posicionDeGuardado ++; // avanza a la siguiente psoción de guardado
-                    }
-                }
-            if (indice == 256) { // no encuentra hijo no nulo
-    
-                if (actual.ancestro != null) { // si no es la raiz
-    
-                    actual = actual.ancestro; // sube en el Trie
-                    char c = anotador.charAt(anotador.length() - 2); // obtiene la anteúltima letra
-                    indice = c; // iguala el indice al valor ASCII de c, asi sigue recorriendo desde donde se había quedado en el nodo anterior
-    
-                    StringBuffer sb = new StringBuffer(anotador); // inicia un stringBuffer que permite modificar un String
-                    sb.deleteCharAt(sb.length() - 1); // le borra una letra
-                    anotador = sb.toString(); // iguala el anotaror al String modificado
-                }
-            }
-                
-            indice ++;
-        }
+
+        Iterador<conjuntoMaterias> iterador = nombresMateriaACerrar.iterador(); // inicializa un iterador en el diccionario de los nombres de la materia a cerrar
+        iterador.siguiente(); // como la primer iteración siempre es null, la realizo ahora para que luego me responda con elementos no nulos
+        
+        String nombreActual = iterador.nombreActual(); // en este punto el iterador está en el primer nombre de la materia,
+                                                        // al igual que el anotador interno, por ello pido el nombre antes de iterar nuevamente
+
+        conjuntoMaterias MateriasDeC = iterador.siguiente(); // itera otra vez, así ya tiene un valor no nulo. obtiene el conjunto de materias de la carrera c
+        // notar que ahora nombreActual y MateriasDeC forman la primera tupla clave-valor
+
+        while (significadosBorrados < significadosPorBorrar) {
+
+            materiasDeC.dato.eliminar(nombreActual); // borro el nombre actual del diccionario de materias de la carrera C
+            nombreActual = iterador.nombreActual(); // actualizo nombreActual al siguiente nombre
+            MateriasDeC = iterador.siguiente(); // actualizo materiasDeC al siguiente conjunto. Asi, actualizo la tupla (clave,valor)
+
+            significadosBorrados++; // sumo 1 a los borrados
+        } // al terminar el while, la materia ya no está guardada en ningún conjunto de materias de ninguna carrera
     }
 }
