@@ -6,7 +6,7 @@ public class SistemaSIU {
 
     private Trie<conjuntoMaterias> carreras; // el diccionario con los nombres de todas las carreras y sus materias
 
-    private ListaEnlazada<conjuntoMaterias> materiasPorCarrera; // la lista con todos los grupos de materias por carrera
+    private Trie<conjuntoMaterias> materiasPorCarrera; // el diccionario con todos los conjuntos de materias por carrera
 
     // sobre el uso de Integer y no int en estudiantes: el tipo pasado no puede ser primitivo en tipos genéricos, por ello se usó Integer
 
@@ -14,7 +14,7 @@ public class SistemaSIU {
     public SistemaSIU(){
         estudiantes = new Trie<Integer>();
         carreras = new Trie<conjuntoMaterias>();
-        materiasPorCarrera = new ListaEnlazada<conjuntoMaterias>();
+        materiasPorCarrera = new Trie<conjuntoMaterias>();
     }
 
     // clase conjuntoMaterias, funge como reemplazo sintáctico
@@ -26,6 +26,10 @@ public class SistemaSIU {
         // constructor de conjuntoMaterias vacía
         private conjuntoMaterias() {
             dato = new Trie<Materia>();
+        }
+
+        public Trie<Materia> dato(){
+            return dato;
         }
     }
 
@@ -48,16 +52,36 @@ public class SistemaSIU {
 
                 ParCarreraMateria parCarreraMateria = paresCarreraMateria[j]; // obtengo parCarreraMateria
                 
-                String carrera = parCarreraMateria.carrera;
-                String materia = parCarreraMateria.nombreMateria;
+                String carrera = parCarreraMateria.carrera; // obtengo la carrera a modificar o definir
+                String nombreMateria = parCarreraMateria.nombreMateria; // obtengo el nombre de la materia a definir
 
                 boolean carreraAunNoDefinida = !(carreras.pertenece(carrera));
 
-                if ( carreraAunNoDefinida ) {
-                    conjuntoMaterias materiasDeC = new conjuntoMaterias();
+                if ( carreraAunNoDefinida ) { // si carrera aún no está definida en carreras
+
+                    conjuntoMaterias materiasDeC = new conjuntoMaterias(); // creo un nuevo conjunto de materias
+                    carreras.definir(carrera, materiasDeC); // en el dicc de carreras defino la clave carrera, que tiene por valor el conjunto de materias nuevo
+                }
+
+                conjuntoMaterias materiasDeC = carreras.obtener(carrera); // obtengo el conjunto de materias de la carrera
+                
+                boolean esPrimero = (j == 0); // una variable booleana que me dice si estoy en el primer elemento de infoMateria,
+
+                if (esPrimero) { // si es la primera vez que defino la materia
+
+                    Materia nuevaMateria = new Materia(); // abro una nueva materia
+                    materiasDeC.dato.definir(nombreMateria, nuevaMateria); // guardo como clave al nombre de la materia, como valor la materia
+
+                    Trie<conjuntoMaterias> nombresMateria = nuevaMateria.nombresMateria(); // obtengo los nombres de la materia
+                    nombresMateria.definir(nombreMateria, materiasDeC); // defino la tupla clave-valor (nombre de materia, conjunto de materias de c) en los nombres de la materia
                 }
             }
-        }    
+        }
+        for (int i = 0; i < libretasUniversitarias.length; i++) {
+            
+            String LU = libretasUniversitarias[i];
+            estudiantes.definir(LU, 0);
+        }  
     }
 
     public void inscribir(String estudiante, String carrera, String materia){
