@@ -65,7 +65,7 @@ public class SistemaSIU {
 
                 conjuntoMaterias materiasDeC = carreras.obtener(carrera); // obtengo el conjunto de materias de la carrera
 
-                materiasDeC.dato.definir(nombreMateria, nuevaMateria); // guardo como clave al nombre de la materia, como valor la materia
+                materiasDeC.dato.definir(nombreMateria, nuevaMateria); // allí guardo la tupla clave-valor (nombre de la materia, Materia)
 
                 Trie<conjuntoMaterias> nombresMateria = nuevaMateria.nombresMateria(); // obtengo el conjunto de los nombres de la materia
                 nombresMateria.definir(nombreMateria, materiasDeC); // allí defino la tupla clave-valor (nombre de materia, conjunto de materias de c)
@@ -81,10 +81,18 @@ public class SistemaSIU {
 
     public void inscribir(String estudiante, String carrera, String materia){
 
-        Integer cantidadMateriasInscripto = estudiantes.obtener(estudiante);
-        estudiantes.definir(materia, cantidadMateriasInscripto + 1); // sumo 1 en el valor que contaviliza
+        Integer cantidadMateriasInscripto = estudiantes.obtener(estudiante); //obtiene la cantidad de materias a las que está inscripto el estudiante
+        estudiantes.definir(materia, cantidadMateriasInscripto + 1); // suma 1 en el valor que contaviliza
 
-        ;
+        conjuntoMaterias materiasDeC = carreras.obtener(carrera); // obtiene el conjunto de materias de la carrera C
+        Materia Materia = materiasDeC.dato.obtener(materia); // obtiene la materia a la que refiere el nombre de materia dado
+
+        ListaEnlazada<String> estudiantesAnotados = Materia.estudiantesAnotados(); // obtiene la lista de estudiantes anotados en la materia
+        estudiantesAnotados.agregarAtras(estudiante); // agrega al estudiante a esta lista 
+    }
+
+    public int inscriptos(String materia, String carrera){
+        throw new UnsupportedOperationException("Método no implementado aún");	    
     }
 
     public void agregarDocente(CargoDocente cargo, String carrera, String materia){
@@ -92,14 +100,6 @@ public class SistemaSIU {
     }
 
     public int[] plantelDocente(String materia, String carrera){
-        throw new UnsupportedOperationException("Método no implementado aún");	    
-    }
-
-    public void cerrarMateria(String materia, String carrera){
-        throw new UnsupportedOperationException("Método no implementado aún");	    
-    }
-
-    public int inscriptos(String materia, String carrera){
         throw new UnsupportedOperationException("Método no implementado aún");	    
     }
 
@@ -112,12 +112,56 @@ public class SistemaSIU {
     }
 
     public String[] materias(String carrera){
-        Trie<Materia> materiasDeC = carreras.obtener(carrera).dato ;
+        Trie<Materia> materiasDeC = carreras.obtener(carrera).dato;
         
         return materiasDeC.recorrer();
     }
 
     public int materiasInscriptas(String estudiante){
         throw new UnsupportedOperationException("Método no implementado aún");	    
+    }
+
+    public void cerrarMateria(String materia, String carrera){
+
+        conjuntoMaterias materiasDeC = carreras.obtener(carrera); // obtiene el conjunto de materias de C
+
+        Materia materiaACerrar = materiasDeC.dato.obtener(materia); // obtiene la materia a cerrar
+
+        Trie<Materia> nombresMateria = materiaACerrar.nombresMateria().dato; // obtiene el diccionario de los nombres de la materia a cerrar
+
+
+        // recorre el diccionario de los nombres y va sacandolo de los conjuntos de las carreras a medida que los encuentra
+    
+        Nodo actual = nombresMateria.raiz(); // arranca a recorrer desde la raiz
+        int indice = 0; // indica en qué hijo está
+    
+        while (indice < 257) { // recorre los 256 hijos en orden, + 1 caso si no encuentra hijos
+    
+            if (actual.hijos[indice] != null) { // si encuentra un hijo no vacio
+    
+                actual = actual.hijos[indice]; // baja en el Trie
+                indice = -1; // resetea el indice para recorrer los hijos del nuevo nodo desde -1 (al final del while le sumo 1 y empieza desde 0 en el próximo)
+    
+                if (actual.significado != null) { // si cuando baja encuentra un significado
+                    res[posicionDeGuardado] = anotador; // añade lo anotado a res
+                    posicionDeGuardado ++; // avanza a la siguiente psoción de guardado
+                    }
+                }
+            if (indice == 256) { // no encuentra hijo no nulo
+    
+                if (actual.ancestro != null) { // si no es la raiz
+    
+                    actual = actual.ancestro; // sube en el Trie
+                    char c = anotador.charAt(anotador.length() - 2); // obtiene la anteúltima letra
+                    indice = c; // iguala el indice al valor ASCII de c, asi sigue recorriendo desde donde se había quedado en el nodo anterior
+    
+                    StringBuffer sb = new StringBuffer(anotador); // inicia un stringBuffer que permite modificar un String
+                    sb.deleteCharAt(sb.length() - 1); // le borra una letra
+                    anotador = sb.toString(); // iguala el anotaror al String modificado
+                }
+            }
+                
+            indice ++;
+        }
     }
 }

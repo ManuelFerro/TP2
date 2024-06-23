@@ -2,8 +2,8 @@ package aed;
 
 public class Trie<T> {
 
-    private Nodo raiz; // el único atributo es el nodo, pero dentro implementamos la estructura del Trie
-    private int cantidadSignificados;
+    private Nodo raiz; // dentro implementamos la estructura del Trie
+    private int cantidadSignificados; // cuenta cuántos significados hay dentro del nodo
 
     // clase interna Nodo, lo implementamos con atributos que permiten desarrollar la estructura de un Trie
     private class Nodo {
@@ -24,6 +24,11 @@ public class Trie<T> {
     public Trie() {
         raiz = new Nodo(); // inicializa la raíz del trie
         cantidadSignificados = 0;
+    }
+
+    // método para obtener la raíz
+    public Nodo raiz(){
+        return raiz;
     }
 
     // método para obtener la cantidad de significados
