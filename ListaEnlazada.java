@@ -185,6 +185,9 @@ public class ListaEnlazada<T> implements Secuencia<T> {
             }
 
         }
+        public String nombreActual(){
+            throw new UnsupportedOperationException("Método no implementado aún"); // se agregó para machear la nueva estructura del iterador
+        }
     }
 
     public Iterador<T> iterador() {
