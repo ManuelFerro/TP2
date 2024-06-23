@@ -91,7 +91,7 @@ public class SistemaSIU {
     public void inscribir(String estudiante, String carrera, String materia){
 
         Integer cantidadMateriasInscripto = estudiantes.obtener(estudiante); //obtiene la cantidad de materias a las que está inscripto el estudiante
-        estudiantes.definir(materia, cantidadMateriasInscripto + 1); // suma 1 en el valor que contaviliza
+        estudiantes.definir(estudiante, cantidadMateriasInscripto + 1); // suma 1 en el valor que contaviliza
 
         conjuntoMaterias materiasDeC = carreras.obtener(carrera); // obtiene el conjunto de materias de la carrera C
         Materia Materia = materiasDeC.dato.obtener(materia); // obtiene la materia a la que refiere el nombre de materia dado
@@ -126,8 +126,11 @@ public class SistemaSIU {
         return materiasDeC.recorrer();
     }
 
-    public int materiasInscriptas(String estudiante){
-        throw new UnsupportedOperationException("Método no implementado aún");	    
+    public int materiasInscriptas(String estudiante) {
+        if (estudiantes.pertenece(estudiante)) {
+            return estudiantes.obtener(estudiante);
+        }
+        return 0;
     }
 
     public void cerrarMateria(String materia, String carrera){
