@@ -26,4 +26,10 @@ interface Iterador<T> {
      */
     public T anterior();
 
+    /**
+     * Devuelve el String asociado a la posición actual (solo usado en la clase Trie).
+     * 
+     */
+    public String nombreActual();
+
 }
