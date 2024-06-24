@@ -11,6 +11,10 @@ public class Plantel {
         docentes = new int[4];
     }
 
+    public int[] docentes() {
+        return docentes;
+    }
+
     public void agregarDocente(CargoDocente cargo){
         docentes[cargo.ordinal()] ++;
     }
