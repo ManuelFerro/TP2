@@ -117,12 +117,14 @@ public class Trie<T> {
         Nodo actual = raiz;
         int indice = 0;
 
-        while ( indice < palabra.length() ) { // recorre cada carácter de la palabra
+        while (indice < palabra.length()){ // recorre cada carácter de la palabra
 
             char c = palabra.charAt(indice); // obtiene el carácter actual
             int valorASCII = c; // convierte el carácter a su valor ASCII
 
-            actual = actual.hijos[valorASCII]; // avanza al siguiente nodo
+            if (actual.hijos[valorASCII] != null) { // si el siguiente no es nulo
+                actual = actual.hijos[valorASCII]; // avanza al siguiente nodo
+            }
             indice ++;
         }
 
@@ -149,24 +151,29 @@ public class Trie<T> {
                     int valorASCII = c; // convierte el carácter a su valor ASCII
 
                     actual.hijos[valorASCII] = null; // corta la rama de donde venía
+                    cantidadSignificados --;
                     borrados ++; // cuenta cuántos se borraron, evita que se borren varios significados
                 }
-            }
-            if (borrados < 1) { // si sale del while entonces ya está en la raíz
+            } // notar que si sale del while entonces ya está en la raíz
+            if (borrados < 1) { // si llegó a la raíz y aún no borró nada 
 
                 char c = palabra.charAt(palabra.length() - indice); // obtiene el carácter actual
                 int valorASCII = c; // convierte el carácter a su valor ASCII
 
                 actual.hijos[valorASCII] = null; // corta la rama a borrar
+                cantidadSignificados --;
                 borrados ++;
+                
             }
         }
         else { // si el nodo a borrar tiene hijos
-            if (borrados < 1) { // podría haber borrado el significado del nodo donde había terminado la variable actual, con la guarda evito esto
+            if (borrados < 1) { // podría haberse borrado el significado del nodo donde había terminado la variable actual, con la guarda se evitsa esto
                 actual.significado = null;
+                
+                cantidadSignificados --;
+                borrados ++;
             }
         }
-        cantidadSignificados --;
     }
 
     // método privado para contar la cantidad de hijos. Al ser comparaciones y recorridos d elongitudes acotadas, la complejidad queda en O(1)
@@ -328,3 +335,4 @@ public class Trie<T> {
 }
 
 //falta el invariante
+
