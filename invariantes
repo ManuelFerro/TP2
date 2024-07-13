@@ -1,0 +1,89 @@
+hola
+
+
+
+//PLANTEL
+
+//INVARIANTE DE REPRESENTACIÓN:
+
+//El plantel de docentes es un array fijo de números y de longitud igual a 4,
+//donde cada posición representa la cantidad de docentes de un específico cargo en la materia.
+//Siempre representan los mismos 4 cargos (PROF, JTP, AY1, AY2).
+//La cantidad de docentes es siempre un numero mayor o igual a 0.
+//El mínimo del plantel de docentes representa el cupo de una materia.
+//No hay permutaciones, a cada cargo siempre le corresponde la misma posición.
+
+
+
+
+//MATERIA
+
+//INVARIANTE DE REPRESENTACIÓN:
+
+//Todo TAD de Materia debe tener la lista "estudiantesAnotados" que representa los estudiantes inscriptos a la materia,
+//el Trie "nombresMateria" que representa los diferentes nombres que tiene la materia dependiendo de la carrera,
+//y el TAD "plantel" que contiene el abasto de docentes y el cupo de la materia.
+//La lista "estudiantesAnotados" debe contener solo strings no nulos y no debe tener duplicados. 
+//El Trie "nombresMateria" debe tener claves que sean strings no nulos y no vacíos, 
+//y los valores deben ser instancias válidas de "conjuntoMaterias".
+//Cada array de docentes de un plantel de Materia deben ser de la misma longitud y representar los mismos cargos.
+//Todos los estudiantes de un TAD Materia que pertenecen a "estudiantesAnotados" 
+//deben tambien pertenecer a la lista "estudiantesAnotados" de los demas TADs Materia que estan en "nombresMateria".
+
+
+
+
+//TRIE
+
+//INVARIANTE DE REPRESENTACIÓN:
+
+//El trie se compone de nodos organizados jerárquicamente.
+//Toda función que requeria buscar una palabra en el trie, como "definir" o "recorrer", lo hace lexicográficamente.
+//Durante la inserción de palabras, cada carácter de la palabra se representa en un nodo correspondiente,
+//Si un nodo hijo no existe para un carácter dado durante la inserción, se crea un nuevo nodo hijo para ese carácter.
+//La búsqueda de una palabra verifica la existencia de un nodo final con significado,
+//para determinar la presencia completa de la palabra en el trie.
+//Cada nodo del trie o tiene por lo menos un hijo, o tiene significado.
+//Cada nodo que no es la raíz tiene un ancestro.
+//Cada nodo tendrá entre 0 y 256 hijos.
+//La suma de todos los nodos del trie que tienen un significado es igual a la variable "CantSignificados"
+//Cada nodo tiene asignado un valor ASCII en el array hijos de su ancestro (salvo la raíz).
+
+
+
+
+//LISTA ENLAZADA
+
+//INVARIANTE DE REPRESENTACIÓN:
+
+//La longitud de la lista es igual a la cantidad de nodos.
+//No pueden haber ciclos.
+//Si se avanza del primer nodo al siguiente y asi sucesivamente, se llega al último.
+//Si se aretrocede desde el último al anterior y asi sucesivamente, se llega al primero.
+//El siguiente del último es null.
+//El anterior del primero es null.
+
+
+
+
+//SISTEMA SIU
+
+//INVARIANTE DE REPRESENTACIÓN:
+
+//Es decir, cada clave en el Trie de estudiantes debe ser única,
+//y representar una libreta universitaria válida.        
+
+//En otras palabras, cada valor asociado a una clave
+//en el Trie de estudiantes debe ser un entero no negativo.
+
+//No hay carreras duplicadas, cada clave en el Trie de carreras debe ser única,
+//y representar el nombre de una carrera válida.
+        
+//Cada valor en el Trie de carreras debe ser una instancia
+//de conjuntoMaterias que contiene un Trie de Materia.
+        
+//Cada clave en el Trie dentro de conjuntoMaterias debe ser única,
+//y representar el nombre de una materia válida dentro de la carrera correspondiente.
+        
+//Para cada carrera en el Trie de carreras,
+//las materias dentro de su conjuntoMaterias deben estar correctamente asociadas a la carrera respectiva.
