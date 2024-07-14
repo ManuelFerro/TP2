@@ -1,7 +1,3 @@
-hola
-
-
-
 //PLANTEL
 
 //INVARIANTE DE REPRESENTACIÓN:
@@ -70,20 +66,32 @@ hola
 
 //INVARIANTE DE REPRESENTACIÓN:
 
-//Es decir, cada clave en el Trie de estudiantes debe ser única,
-//y representar una libreta universitaria válida.        
+//Cada clave en el Trie de estudiantes es un string acotado de máximo 6 caracteres el cual representa un LU.
+//Cada valor asociado a una clave en el Trie de estudiantes debe ser un entero no negativo.
 
-//En otras palabras, cada valor asociado a una clave
-//en el Trie de estudiantes debe ser un entero no negativo.
 
-//No hay carreras duplicadas, cada clave en el Trie de carreras debe ser única,
-//y representar el nombre de una carrera válida.
-        
-//Cada valor en el Trie de carreras debe ser una instancia
-//de conjuntoMaterias que contiene un Trie de Materia.
-        
-//Cada clave en el Trie dentro de conjuntoMaterias debe ser única,
-//y representar el nombre de una materia válida dentro de la carrera correspondiente.
-        
-//Para cada carrera en el Trie de carreras,
-//las materias dentro de su conjuntoMaterias deben estar correctamente asociadas a la carrera respectiva.
+//Cada clave en el Trie de carreras debe representar el nombre de una carrera válida con un string no acotado.
+//Cada valor en el Trie de carreras debe ser una instancia de conjuntoMaterias que contiene un Trie de Materia.
+
+
+//Cada clave en el Trie dentro de conjuntoMaterias debe representar 
+//el nombre de una materia válida dentro de la carrera correspondiente.
+//Cada valor en el Trie dentro de conjuntoMaterias debe ser una instancia del TAD Materia,
+//la cual tiene acceso a los estudiantes anotados, 
+//a los distintos nombres de la materia según la carrera (nombresMateria),
+//y al plantel docente.
+
+//Toda carrera que este incluida en nombresMateria, esta incluida en el Trie de carreras.
+
+//Al entrar en el TAD de una materia, los TADs Materia de los distintos nombres que puede tener la materia
+//según la carrera deben tener los mismos estudiantes y mismo plantel docente que la materia a la cual se entró.
+
+//¿Para cada carrera en el Trie de carreras,
+//las materias dentro de su conjuntoMaterias deben estar correctamente asociadas a la carrera respectiva?.
+
+//Todo alumno que este inscripto en un materia (ubicado en la lista enlazada del TAD Materia),
+//debe estar incluido en el Trie de estudiantes.
+
+//Para todo alumno de la facultad, la suma de todas las materias a las cuales se inscribió se ve
+//reflejado en el valor del Trie de estudiantes (la clave es el LU del alumno y el valor la cantidad de materias).
+
