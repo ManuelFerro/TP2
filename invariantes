@@ -19,9 +19,9 @@
 //Todo TAD de Materia debe tener la lista "estudiantesAnotados" que representa los estudiantes inscriptos a la materia,
 //el Trie "nombresMateria" que representa los diferentes nombres que tiene la materia dependiendo de la carrera,
 //y el TAD "plantel" que contiene el abasto de docentes y el cupo de la materia.
-//La lista "estudiantesAnotados" debe contener solo strings no nulos y no debe tener duplicados. 
-//El Trie "nombresMateria" debe tener claves que sean strings no nulos y no vacíos, 
-//y los valores deben ser instancias válidas de "conjuntoMaterias".
+//La lista "estudiantesAnotados" debe contener solo strings no nulos y no debe tener duplicados.
+//El Trie "nombresMateria" debe tener claves que sean strings no nulos y no vacíos,
+//y los valores deben ser instancias válidas de listas enlazadas de "conjuntoMaterias".
 //Cada array de docentes de un plantel de Materia deben ser de la misma longitud y representar los mismos cargos.
 //Todos los estudiantes de un TAD Materia que pertenecen a "estudiantesAnotados" 
 //deben tambien pertenecer a la lista "estudiantesAnotados" de los demas TADs Materia que estan en "nombresMateria".
@@ -33,9 +33,10 @@
 
 //INVARIANTE DE REPRESENTACIÓN:
 
-//El trie se compone de nodos organizados jerárquicamente.
-//Toda función que requeria buscar una palabra en el trie, como "definir" o "recorrer", lo hace lexicográficamente.
-//Durante la inserción de palabras, cada carácter de la palabra se representa en un nodo correspondiente,
+//El trie se compone de nodos organizados lexicográficamente.
+//Toda función que requiere buscar una palabra en el trie, como "definir" o "recorrer", lo hace lexicográficamente.
+//Durante la inserción de palabras, cada carácter de la palabra se representa en un nodo correspondiente.
+//Cada nodo tiene asignado un valor ASCII en el array hijos de su ancestro (salvo la raíz).
 //Si un nodo hijo no existe para un carácter dado durante la inserción, se crea un nuevo nodo hijo para ese carácter.
 //La búsqueda de una palabra verifica la existencia de un nodo final con significado,
 //para determinar la presencia completa de la palabra en el trie.
@@ -43,7 +44,7 @@
 //Cada nodo que no es la raíz tiene un ancestro.
 //Cada nodo tendrá entre 0 y 256 hijos.
 //La suma de todos los nodos del trie que tienen un significado es igual a la variable "CantSignificados"
-//Cada nodo tiene asignado un valor ASCII en el array hijos de su ancestro (salvo la raíz).
+
 
 
 
@@ -52,12 +53,11 @@
 
 //INVARIANTE DE REPRESENTACIÓN:
 
-//La longitud de la lista es igual a la cantidad de nodos.
+//La longitud de la lista enlazada es igual a la cantidad de nodos.
 //No pueden haber ciclos.
 //Si se avanza del primer nodo al siguiente y asi sucesivamente, se llega al último.
 //Si se aretrocede desde el último al anterior y asi sucesivamente, se llega al primero.
-//El siguiente del último es null.
-//El anterior del primero es null.
+//El siguiente del último es null al igual que el anterior del primero es null.
 
 
 
@@ -67,15 +67,20 @@
 //INVARIANTE DE REPRESENTACIÓN:
 
 //Cada clave en el Trie de estudiantes es un string acotado de máximo 6 caracteres el cual representa un LU.
-//Cada valor asociado a una clave en el Trie de estudiantes debe ser un entero no negativo.
+//Cada valor asociado a una clave en el Trie de estudiantes debe ser un entero no negativo que representa
+//la cantidad de materias a la cual el estudiante esta inscripto.
 
+//Para todo alumno de la facultad, la suma de todas las materias a las cuales se inscribió se ve
+//reflejado en el valor del Trie de estudiantes (la clave es el LU del alumno y el valor la cantidad de materias).
 
 //Cada clave en el Trie de carreras debe representar el nombre de una carrera válida con un string no acotado.
-//Cada valor en el Trie de carreras debe ser una instancia de conjuntoMaterias que contiene un Trie de Materia.
+//Cada valor en el Trie de carreras debe ser un Trie del conjuntoMaterias de la carrera.
 
+//Para cada carrera en el Trie de carreras,
+//las materias dentro de su conjuntoMaterias deben estar correctamente asociadas a la carrera respectiva.
 
-//Cada clave en el Trie dentro de conjuntoMaterias debe representar 
-//el nombre de una materia válida dentro de la carrera correspondiente.
+//Cada clave en el Trie de conjuntoMaterias debe representar el nombre de una materia
+//válida dentro de la carrera correspondiente.
 //Cada valor en el Trie dentro de conjuntoMaterias debe ser una instancia del TAD Materia,
 //la cual tiene acceso a los estudiantes anotados, 
 //a los distintos nombres de la materia según la carrera (nombresMateria),
@@ -86,12 +91,5 @@
 //Al entrar en el TAD de una materia, los TADs Materia de los distintos nombres que puede tener la materia
 //según la carrera deben tener los mismos estudiantes y mismo plantel docente que la materia a la cual se entró.
 
-//¿Para cada carrera en el Trie de carreras,
-//las materias dentro de su conjuntoMaterias deben estar correctamente asociadas a la carrera respectiva?.
-
 //Todo alumno que este inscripto en un materia (ubicado en la lista enlazada del TAD Materia),
 //debe estar incluido en el Trie de estudiantes.
-
-//Para todo alumno de la facultad, la suma de todas las materias a las cuales se inscribió se ve
-//reflejado en el valor del Trie de estudiantes (la clave es el LU del alumno y el valor la cantidad de materias).
-

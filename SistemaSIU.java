@@ -3,25 +3,34 @@ package aed;
 public class SistemaSIU {
 
     //INVARIANTE DE REPRESENTACIÓN:
-        //Es decir, cada clave en el Trie de estudiantes debe ser única,
-        //y representar una libreta universitaria válida.
-        
-        //En otras palabras, cada valor asociado a una clave
-        //en el Trie de estudiantes debe ser un entero no negativo.
-        
-        //No hay carreras duplicadas, cada clave en el Trie de carreras debe ser única,
-        //y representar el nombre de una carrera válida.
-        
-        //Cada valor en el Trie de carreras debe ser una instancia
-        //de conjuntoMaterias que contiene un Trie de Materia.
-        
-        //Cada clave en el Trie dentro de conjuntoMaterias debe ser única,
-        //y representar el nombre de una materia válida dentro de la carrera correspondiente.
-        
-        //Para cada carrera en el Trie de carreras,
-        //las materias dentro de su conjuntoMaterias deben estar correctamente asociadas a la carrera respectiva.
 
+    //Cada clave en el Trie de estudiantes es un string acotado de máximo 6 caracteres el cual representa un LU.
+    //Cada valor asociado a una clave en el Trie de estudiantes debe ser un entero no negativo que representa
+    //la cantidad de materias a la cual el estudiante esta inscripto.
 
+    //Para todo alumno de la facultad, la suma de todas las materias a las cuales se inscribió se ve
+    //reflejado en el valor del Trie de estudiantes (la clave es el LU del alumno y el valor la cantidad de materias).
+
+    //Cada clave en el Trie de carreras debe representar el nombre de una carrera válida con un string no acotado.
+    //Cada valor en el Trie de carreras debe ser un Trie del conjuntoMaterias de la carrera.
+
+    //Para cada carrera en el Trie de carreras,
+    //las materias dentro de su conjuntoMaterias deben estar correctamente asociadas a la carrera respectiva.
+
+    //Cada clave en el Trie de conjuntoMaterias debe representar el nombre de una materia
+    //válida dentro de la carrera correspondiente.
+    //Cada valor en el Trie dentro de conjuntoMaterias debe ser una instancia del TAD Materia,
+    //la cual tiene acceso a los estudiantes anotados, 
+    //a los distintos nombres de la materia según la carrera (nombresMateria),
+    //y al plantel docente.
+
+    //Toda carrera que este incluida en nombresMateria, esta incluida en el Trie de carreras.
+
+    //Al entrar en el TAD de una materia, los TADs Materia de los distintos nombres que puede tener la materia
+    //según la carrera deben tener los mismos estudiantes y mismo plantel docente que la materia a la cual se entró.
+
+    //Todo alumno que este inscripto en un materia (ubicado en la lista enlazada del TAD Materia),
+    //debe estar incluido en el Trie de estudiantes.
 
     private Trie<Integer> estudiantes; // el diccionario con todos los estudiantes y la cantidad de materias donde se han inscripto
 
@@ -35,7 +44,7 @@ public class SistemaSIU {
         carreras = new Trie<conjuntoMaterias>();
     }
 
-    // clase conjuntoMaterias, funge como reemplazo sintáctico
+    // clase conjuntoMaterias, finge como reemplazo sintáctico
     // representa el conjunto de los nombres de las materias de una carrera, con la materia a la que se refieren como valor, reepresentados como un diccionario 
 
     public class conjuntoMaterias {
@@ -64,88 +73,90 @@ public class SistemaSIU {
         for (int i = 0; i < infoMaterias.length; i++) {  // O( Σc∈C( |c| ∗ |Mc| )
             
             // crea una nueva Materia vacía y la guarda en una variable interna "nuevaMateria"
-            Materia nuevaMateria = new Materia(); 
+            Materia nuevaMateria = new Materia();             //O(1) asignación.
             // notar que cada vez que se itere sobre infoMaterias, la variable pasará a guardar una nueva Materia vacía
             
             // obtiene infoMateria
-            InfoMateria infoMateria = infoMaterias[i]; 
+            InfoMateria infoMateria = infoMaterias[i];           //O(1) asignación.
             // extrae los pares carrera-materia
-            ParCarreraMateria[] paresCarreraMateria = infoMateria.getParesCarreraMateria(); 
+            ParCarreraMateria[] paresCarreraMateria = infoMateria.getParesCarreraMateria();       //O(1) asignación.
             // obtiene la cantidad de pares carrera-materia que tiene
-            int longitud = paresCarreraMateria.length; 
+            int longitud = paresCarreraMateria.length;           //O(1) asignación.
             
             // por cada parCarreraMateria en infoMateria;
             for (int j = 0; j < longitud; j++) {        //O ( Σm∈M Σn∈Nm ( |n| ) )
                 
                 // obtiene parCarreraMateria
-                ParCarreraMateria parCarreraMateria = paresCarreraMateria[j]; 
+                ParCarreraMateria parCarreraMateria = paresCarreraMateria[j];        //O(1) asignación.
                 
                 // obtiene la carrera a modificar o definir
-                String carrera = parCarreraMateria.carrera; 
+                String carrera = parCarreraMateria.carrera;           //O(1) asignación.
                 // obtiene el nombre de la materia a definir
-                String nombreMateria = parCarreraMateria.nombreMateria;
+                String nombreMateria = parCarreraMateria.nombreMateria;                //O(1) asignación.
 
                 // si carreras es nulo
-                if ((carreras == null)) {
+                if ((carreras == null)) {                 //O(1) por ser una pregunta.
 
                     // crea un nuevo diccionario de carreras
-                    Trie<conjuntoMaterias> nuevasCarreras = new Trie<>();
+                    Trie<conjuntoMaterias> nuevasCarreras = new Trie<>();          //O(1) asignación.
                     // define a carreras como igual al diccionario creado
-                    carreras = nuevasCarreras;
+                    carreras = nuevasCarreras;            //O(1) asignación.
                 }
 
                 // si carrera aún no está definida en carreras
-                if ( !(carreras.pertenece(carrera)) ) { 
+                if ( !(carreras.pertenece(carrera)) ) {      //O(|C|), pertenece es una función que tiene complejidad O(|p|)
+                                                            //siendo p la palabra que se esta buscando.
 
                     // crea un nuevo conjunto de materias
-                    conjuntoMaterias materiasDeC = new conjuntoMaterias(); 
+                    conjuntoMaterias materiasDeC = new conjuntoMaterias();         //O(1) asignación.
                     // en el dicc de carreras define la tupla clave-valor (carrera, nuevo conjunto de materias)
-                    carreras.definir(carrera, materiasDeC); 
+                    carreras.definir(carrera, materiasDeC);         //O(|C|), igual que pertenece, es una función con
+                                                                   //complejidad O(|p|) siendo p la palabra a definir
                 }
 
                 // obtiene el conjunto de materias de la carrera
-                conjuntoMaterias materiasDeC = carreras.obtener(carrera); 
+                conjuntoMaterias materiasDeC = carreras.obtener(carrera);          //O(|C|), se recorre la carrera hasta llegar al nodo final y entra en el trie de materias de tal carrera.
                 // allí guarda la tupla clave-valor (nombre de la materia, Materia)
-                materiasDeC.dato.definir(nombreMateria, nuevaMateria);
+                materiasDeC.dato.definir(nombreMateria, nuevaMateria);       //O(|M|), definir tiene complejidad O(|p|)
 
                 // obtiene el conjunto de los nombres de la materia
-                Trie<ListaEnlazada<conjuntoMaterias>> nombresMateria = nuevaMateria.nombresMateria();
+                Trie<ListaEnlazada<conjuntoMaterias>> nombresMateria = nuevaMateria.nombresMateria();     //O(1) asignación.
 
                 // si el nombre de la materia aún no pertenece al conjunto de nombres de la materia
-                if ( !(nombresMateria.pertenece(nombreMateria))) {
+                if ( !(nombresMateria.pertenece(nombreMateria))) {        //O(|M|), pertenece tiene complejidad O(|p|)
                     // crea una nueva lista de conjuntos de materias
-                    ListaEnlazada<conjuntoMaterias> nuevaListaConjuntosMaterias = new ListaEnlazada<>();
+                    ListaEnlazada<conjuntoMaterias> nuevaListaConjuntosMaterias = new ListaEnlazada<>();     //O(1) asignación.
                     // define listaConjuntosMaterias en los nombres de la materia
-                    nombresMateria.definir(nombreMateria, nuevaListaConjuntosMaterias);   
+                    nombresMateria.definir(nombreMateria, nuevaListaConjuntosMaterias);       //O(|M|), definir tiene complejidad O(|p|)
                 }
                 
                 // obtiene la lista de conjuntos de materias que contienen el nombre de la materia
-                ListaEnlazada<conjuntoMaterias> listaConjuntosMaterias = nombresMateria.obtener(nombreMateria);
+                ListaEnlazada<conjuntoMaterias> listaConjuntosMaterias = nombresMateria.obtener(nombreMateria);         //O(1) asignación.
 
                 // agrega las materias de C a la lista
-                listaConjuntosMaterias.agregarAtras(materiasDeC);
+                listaConjuntosMaterias.agregarAtras(materiasDeC);       //O(1) por ser una lista acotada.
                 // notar que el orden de agregado no importa pues estas listas no se recorrerán sino hasta el procedimiento cerrarMateria
                 // donde se deberá borrar el nombre de todos los conjuntos independientemente de su orden de llegada.
 
                 // en el conjunto de los nombres de la materia define
                 // la tupla clave-valor (nombre de materia, lista de conjuntos (contiene a las materias de c))
-                nombresMateria.definir(nombreMateria, listaConjuntosMaterias);
+                nombresMateria.definir(nombreMateria, listaConjuntosMaterias);          //O(|M|), definir tiene complejidad O(|p|)
             }
         }
         // por cada LU
         for (int i = 0; i < libretasUniversitarias.length; i++) {       //O(E)
 
             // si estudiantes es nulo
-            if ((estudiantes == null)) {
+            if ((estudiantes == null)) {               //O(1) por ser una pregunta.
                 // creo un nuevo diccionario de estudiantes
-                Trie<Integer> nuevosEstudiantes = new Trie<>();
+                Trie<Integer> nuevosEstudiantes = new Trie<>();         //O(1) asignación.
                 // defino a estudiantes como igual al diccionario creado
-                estudiantes = nuevosEstudiantes;
+                estudiantes = nuevosEstudiantes;           //O(1) asignación.
             }
             
-            String LU = libretasUniversitarias[i]; 
+            String LU = libretasUniversitarias[i];           //O(1) asignación.
             // guardo la tupla clave valor (LU, cantidad de materias inscripto)
-            estudiantes.definir(LU, 0);
+            estudiantes.definir(LU, 0);          //O(1) por ser una lista acotada.
 
             // notar que la cantidad de materias inscripto es siempre 0 al iniciar el sistema porque aún nadie se anotó
         }  
@@ -245,47 +256,48 @@ public class SistemaSIU {
     public void cerrarMateria(String materia, String carrera){
 
         // obtiene el conjunto de materias de C
-        conjuntoMaterias materiasDeC = carreras.obtener(carrera);
+        conjuntoMaterias materiasDeC = carreras.obtener(carrera);      //O(|C|), se recorre la carrera hasta llegar al nodo final y entra en el trie de materias de tal carrera.
         // obtiene la materia a cerrar
-        Materia materiaACerrar = materiasDeC.dato.obtener(materia);
+        Materia materiaACerrar = materiasDeC.dato.obtener(materia);     //O(|M|), se recorre la materia de entrada y llega al nodo final con las caracteristicas de tal materia.
 
         // inicializa un iterador sobre la lista de estudiantes de la materia a cerrar
-        Iterador<String> iteradorListaEstudiantes = materiaACerrar.estudiantesAnotados().iterador();
+        Iterador<String> iteradorListaEstudiantes = materiaACerrar.estudiantesAnotados().iterador();      //O(1) asignación.
 
         // recorre la lista de estudiantes de la materia
-        while (iteradorListaEstudiantes.haySiguiente()) { 
+        while (iteradorListaEstudiantes.haySiguiente()) {         //O(Em) ya que recorre toda la lista de los estudiantes de la materia
 
             // obtiene una libreta universitaria
-            String LU = iteradorListaEstudiantes.siguiente();
+            String LU = iteradorListaEstudiantes.siguiente();          //O(1) asignación.
             // obtiene las materias a las que se anotó la LU
-            int materiasInscripto = estudiantes.obtener(LU);
+            int materiasInscripto = estudiantes.obtener(LU);         //O(1) por ser una lista acotada.
             // le resta 1 a la cantidad de materias a las que se anotó la LU
-            estudiantes.definir(LU, materiasInscripto - 1); 
+            estudiantes.definir(LU, materiasInscripto - 1);           
         }
 
         // obtiene el diccionario de los nombres de la materia a cerrar; sus tuplas clave-valor son (nombreMateria, materiasDeC)
-        Trie<ListaEnlazada<conjuntoMaterias>> nombresMateriaACerrar = materiaACerrar.nombresMateria();
+        Trie<ListaEnlazada<conjuntoMaterias>> nombresMateriaACerrar = materiaACerrar.nombresMateria();      //O(1) asignación.
 
         // inicializa enteros que representan los significados por borrar y los borrados hasta ahora. Se usarán para un while
-        int significadosPorBorrar = nombresMateriaACerrar.cantidadSignificados();
-        int significadosBorrados = 0;
+        int significadosPorBorrar = nombresMateriaACerrar.cantidadSignificados();       //O(1) asignación.
+        int significadosBorrados = 0;           //O(1) asignación.
 
         // inicializa un iterador en el diccionario de los nombres de la materia a cerrar,
         // este va dedolviendo la lista con los conjuntos de materias donde están las materias de la carrera actual a medida que avanza
-        Iterador<ListaEnlazada<conjuntoMaterias>> iteradorMateriasDeC = nombresMateriaACerrar.iterador();
+        Iterador<ListaEnlazada<conjuntoMaterias>> iteradorMateriasDeC = nombresMateriaACerrar.iterador();     //O(1) asignación.
 
         // como la primer iteración siempre es null, se realiza primero para que luego responda con elementos no nulos
-        iteradorMateriasDeC.siguiente();
+        iteradorMateriasDeC.siguiente();           //O(1), solo hace una iteración.
 
         // en este punto el iterador está en el primer nombre de la materia, al igual que el anotador interno
-        String nombreActual = iteradorMateriasDeC.nombreActual(); // pide el nombre antes de iterar nuevamente
+        // pide el nombre antes de iterar nuevamente
+        String nombreActual = iteradorMateriasDeC.nombreActual();         //O(1) asignación.
 
         // itera otra vez, así ya tiene un valor no nulo. obtiene la lista de conjuntos de materias (contiene el correspondiente a la carrera actual)
-        ListaEnlazada<conjuntoMaterias> listaConjuntos_Actual = iteradorMateriasDeC.siguiente();
+        ListaEnlazada<conjuntoMaterias> listaConjuntos_Actual = iteradorMateriasDeC.siguiente();       //O(1) asignación.
 
         // notar que ahora nombreActual y listaConjuntos_Actual forman la primera tupla clave-valor
 
-        // recorre el diccionario de los nombres y va sacandolo de los conjuntos de las carreras a medida que los encuentra
+        // recorre el diccionario de los nombres y va sacandolos de los conjuntos de las carreras a medida que los encuentra
         while (significadosBorrados < significadosPorBorrar) {
 
             // recorre la lista de conjuntos donde está el nombre actual, borrandolos cada vez
@@ -305,10 +317,10 @@ public class SistemaSIU {
             // haciendo que estos valores temrinen siendo los que definan la complejidad en lugar de #C.
 
             // actualiza nombreActual al siguiente nombre
-            nombreActual = iteradorMateriasDeC.nombreActual();
+            nombreActual = iteradorMateriasDeC.nombreActual();          //O(1) asignación.
             // actualiza materiasDeC al siguiente conjunto. Asi, actualizo la tupla (clave,valor)
-            ListaEnlazada<conjuntoMaterias> actualizacionListaConjuntos = iteradorMateriasDeC.siguiente();
-            listaConjuntos_Actual = actualizacionListaConjuntos;
+            ListaEnlazada<conjuntoMaterias> actualizacionListaConjuntos = iteradorMateriasDeC.siguiente();      //O(1) asignación.
+            listaConjuntos_Actual = actualizacionListaConjuntos;         //O(1) asignación.
 
             significadosBorrados++; // suma 1 a los borrados
         } // al terminar el while, la materia ya no está guardada en ningún conjunto de materias de ninguna carrera

@@ -3,6 +3,15 @@ package aed;
 // import java.util.*;
 
 public class ListaEnlazada<T> implements Secuencia<T> {
+
+    //INVARIANTE DE REPRESENTACIÓN:
+
+    //La longitud de la lista enlazada es igual a la cantidad de nodos.
+    //No pueden haber ciclos.
+    //Si se avanza del primer nodo al siguiente y asi sucesivamente, se llega al último.
+    //Si se aretrocede desde el último al anterior y asi sucesivamente, se llega al primero.
+    //El siguiente del último es null al igual que el anterior del primero es null.
+
     private Nodo primero;
     private Nodo ultimo;
     private int longitud;

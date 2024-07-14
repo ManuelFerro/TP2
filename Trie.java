@@ -2,10 +2,19 @@ package aed;
 
 public class Trie<T> {
 
-//INVARIANTE DE REPRESENTACIÓN:
-//El trie se compone de nodos organizados jerárquicamente. Cada nodo tiene al menos un hijo o está marcado como el final de una palabra (esPalabra es true).
-//Durante la inserción de palabras, cada carácter de la palabra se representa en un nodo correspondiente. Si un nodo hijo no existe para un carácter dado durante la inserción, se crea un nuevo nodo hijo para ese carácter.
-//La búsqueda de una palabra verifica la existencia de un nodo final con esPalabra verdadero para determinar la presencia completa de la palabra en el trie.
+    //INVARIANTE DE REPRESENTACIÓN:
+
+    //El trie se compone de nodos organizados lexicográficamente.
+    //Toda función que requiere buscar una palabra en el trie, como "definir" o "recorrer", lo hace lexicográficamente.
+    //Durante la inserción de palabras, cada carácter de la palabra se representa en un nodo correspondiente.
+    //Cada nodo tiene asignado un valor ASCII en el array hijos de su ancestro (salvo la raíz).
+    //Si un nodo hijo no existe para un carácter dado durante la inserción, se crea un nuevo nodo hijo para ese carácter.
+    //La búsqueda de una palabra verifica la existencia de un nodo final con significado,
+    //para determinar la presencia completa de la palabra en el trie.
+    //Cada nodo del trie o tiene por lo menos un hijo, o tiene significado.
+    //Cada nodo que no es la raíz tiene un ancestro.
+    //Cada nodo tendrá entre 0 y 256 hijos.
+    //La suma de todos los nodos del trie que tienen un significado es igual a la variable "CantSignificados"
 
     private Nodo raiz; // dentro implementamos la estructura del Trie
     private int cantidadSignificados; // cuenta cuántos significados hay dentro del nodo
