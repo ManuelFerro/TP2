@@ -106,28 +106,40 @@ public class SistemaSIU {
                 // si carrera aún no está definida en carreras
                 if ( !(carreras.pertenece(carrera)) ) {      //O(|C|), pertenece es una función que tiene complejidad O(|p|)
                                                             //siendo p la palabra que se esta buscando.
+                                                           //Esta complejidad no afecta la complejidad final del
+                                                          //algoritmo porque esta incluida en la sumatoria del primer for
 
                     // crea un nuevo conjunto de materias
                     conjuntoMaterias materiasDeC = new conjuntoMaterias();         //O(1) asignación.
                     // en el dicc de carreras define la tupla clave-valor (carrera, nuevo conjunto de materias)
                     carreras.definir(carrera, materiasDeC);         //O(|C|), igual que pertenece, es una función con
                                                                    //complejidad O(|p|) siendo p la palabra a definir
+                                                                  //por la mismas razones que se justifico anteriormente,
+                                                                 //esta complejidad no afecta a la complejidad final.
                 }
 
                 // obtiene el conjunto de materias de la carrera
-                conjuntoMaterias materiasDeC = carreras.obtener(carrera);          //O(|C|), se recorre la carrera hasta llegar al nodo final y entra en el trie de materias de tal carrera.
+                conjuntoMaterias materiasDeC = carreras.obtener(carrera);    //O(|C|), se recorre la carrera hasta llegar al nodo final y entra en el trie de materias de tal carrera.
+                                                                            //por la mismas razones que se justifico anteriormente,
+                                                                           //esta complejidad no afecta a la complejidad final.
                 // allí guarda la tupla clave-valor (nombre de la materia, Materia)
                 materiasDeC.dato.definir(nombreMateria, nuevaMateria);       //O(|M|), definir tiene complejidad O(|p|)
+                                                                            //por la mismas razones que se justifico anteriormente,
+                                                                           //esta complejidad no afecta a la complejidad final.
 
                 // obtiene el conjunto de los nombres de la materia
                 Trie<ListaEnlazada<conjuntoMaterias>> nombresMateria = nuevaMateria.nombresMateria();     //O(1) asignación.
 
                 // si el nombre de la materia aún no pertenece al conjunto de nombres de la materia
                 if ( !(nombresMateria.pertenece(nombreMateria))) {        //O(|M|), pertenece tiene complejidad O(|p|)
+                                                                         //por la mismas razones que se justifico anteriormente,
+                                                                        //esta complejidad no afecta a la complejidad final.
                     // crea una nueva lista de conjuntos de materias
                     ListaEnlazada<conjuntoMaterias> nuevaListaConjuntosMaterias = new ListaEnlazada<>();     //O(1) asignación.
                     // define listaConjuntosMaterias en los nombres de la materia
                     nombresMateria.definir(nombreMateria, nuevaListaConjuntosMaterias);       //O(|M|), definir tiene complejidad O(|p|)
+                                                                                             //por la mismas razones que se justifico anteriormente,
+                                                                                            //esta complejidad no afecta a la complejidad final.
                 }
                 
                 // obtiene la lista de conjuntos de materias que contienen el nombre de la materia
@@ -141,6 +153,8 @@ public class SistemaSIU {
                 // en el conjunto de los nombres de la materia define
                 // la tupla clave-valor (nombre de materia, lista de conjuntos (contiene a las materias de c))
                 nombresMateria.definir(nombreMateria, listaConjuntosMaterias);          //O(|M|), definir tiene complejidad O(|p|)
+                                                                                       //por la mismas razones que se justifico anteriormente,
+                                                                                      //esta complejidad no afecta a la complejidad final.
             }
         }
         // por cada LU
@@ -271,7 +285,7 @@ public class SistemaSIU {
             // obtiene las materias a las que se anotó la LU
             int materiasInscripto = estudiantes.obtener(LU);         //O(1) por ser una lista acotada.
             // le resta 1 a la cantidad de materias a las que se anotó la LU
-            estudiantes.definir(LU, materiasInscripto - 1);           
+            estudiantes.definir(LU, materiasInscripto - 1);        //O(1) por ser una lista acotada.
         }
 
         // obtiene el diccionario de los nombres de la materia a cerrar; sus tuplas clave-valor son (nombreMateria, materiasDeC)
@@ -293,25 +307,30 @@ public class SistemaSIU {
         String nombreActual = iteradorMateriasDeC.nombreActual();         //O(1) asignación.
 
         // itera otra vez, así ya tiene un valor no nulo. obtiene la lista de conjuntos de materias (contiene el correspondiente a la carrera actual)
-        ListaEnlazada<conjuntoMaterias> listaConjuntos_Actual = iteradorMateriasDeC.siguiente();       //O(1) asignación.
+        ListaEnlazada<conjuntoMaterias> listaConjuntos_Actual = iteradorMateriasDeC.siguiente();       //O(1) por hacer una sola iteración y una asignación.
 
         // notar que ahora nombreActual y listaConjuntos_Actual forman la primera tupla clave-valor
 
         // recorre el diccionario de los nombres y va sacandolos de los conjuntos de las carreras a medida que los encuentra
-        while (significadosBorrados < significadosPorBorrar) {
+        while (significadosBorrados < significadosPorBorrar) {      //O( Σn∈Nm( |n| ) ya que recorre todos los nombres que tiene la materia a cerrar.
+                                                                   //al recorrerlo nos queda la complejidad de la sumatoria.
+                                                                  //{*} dentro de este, las demas operaciones son O(1),
+                                                                 //incluyendo definir y borrar en carreras, lo cual
+                                                                //lo consideramos acotado.
 
             // recorre la lista de conjuntos donde está el nombre actual, borrandolos cada vez
-            while (0 < listaConjuntos_Actual.longitud()) {
+            while (0 < listaConjuntos_Actual.longitud()) {         //{*} O(1) por ser una lista acotada.
                 // obtiene el primero de la lista de conjuntos
-                conjuntoMaterias materiasDeC_Actual = listaConjuntos_Actual.primero();
+                conjuntoMaterias materiasDeC_Actual = listaConjuntos_Actual.primero();      //O(1) asignación.
                 // borra el conjunto obtenido de la lista de conjuntos
-                listaConjuntos_Actual.eliminar(0);
+                listaConjuntos_Actual.eliminar(0);         //{*} O(1) por ser una lista acotada.
 
                 // borra el nombre actual del diccionario de materias de la carrera actual
-                materiasDeC_Actual.dato.eliminar(nombreActual);   
+                materiasDeC_Actual.dato.eliminar(nombreActual);     //O(|n|), la cual ya esta incluida en la sumatoria
+                                                                   //del while.
             }
             // notar que, en el peor caso, la lista tiene una longitud igual a la cantidad de carreras que tenga la facultad: "#C".
-            // En la consigna nunca se aclara si dicho conjunto es acotado o no, pero supondremos que es acotado.
+            // {*} En la consigna nunca se aclara si dicho conjunto es acotado o no, pero supondremos que es acotado.
             // Tomamos esta postura ya que consideramos que en la práctica el número de carreras de grado que la facultad imparte
             // se encuentrá más acotado que la longitud de los nombres de las mismas, de sus materias, o la cantidad de alumnos que las cursen,
             // haciendo que estos valores temrinen siendo los que definan la complejidad en lugar de #C.
@@ -322,7 +341,10 @@ public class SistemaSIU {
             ListaEnlazada<conjuntoMaterias> actualizacionListaConjuntos = iteradorMateriasDeC.siguiente();      //O(1) asignación.
             listaConjuntos_Actual = actualizacionListaConjuntos;         //O(1) asignación.
 
-            significadosBorrados++; // suma 1 a los borrados
+            // suma 1 a los borrados
+            significadosBorrados++;         //O(1) asignación. 
         } // al terminar el while, la materia ya no está guardada en ningún conjunto de materias de ninguna carrera
     }
+
+    //Complejidad = O( |C| + |M| + Σn∈Nm( |n| ) + Em)
 }
