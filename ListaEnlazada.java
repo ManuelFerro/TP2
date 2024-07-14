@@ -77,7 +77,11 @@ public class ListaEnlazada<T> implements Secuencia<T> {
         return res.valor;
     }
 
-    public void eliminar(int i) {
+    public T primero(){
+        return primero.valor;
+    }
+
+    public void eliminar(int i) { // notar que es complejidad O(1) si se borra el primer elemento
         Nodo actual = primero;
         Nodo previo = primero;
         int j = 0;
