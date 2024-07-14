@@ -2,6 +2,11 @@ package aed;
 
 public class Trie<T> {
 
+//INVARIANTE DE REPRESENTACIÓN:
+//El trie se compone de nodos organizados jerárquicamente. Cada nodo tiene al menos un hijo o está marcado como el final de una palabra (esPalabra es true).
+//Durante la inserción de palabras, cada carácter de la palabra se representa en un nodo correspondiente. Si un nodo hijo no existe para un carácter dado durante la inserción, se crea un nuevo nodo hijo para ese carácter.
+//La búsqueda de una palabra verifica la existencia de un nodo final con esPalabra verdadero para determinar la presencia completa de la palabra en el trie.
+
     private Nodo raiz; // dentro implementamos la estructura del Trie
     private int cantidadSignificados; // cuenta cuántos significados hay dentro del nodo
 
@@ -76,20 +81,21 @@ public class Trie<T> {
             
             // si no hay nodo hijo para el carácter (implica que antes no estaba definido)
             if (actual.hijos[valorASCII] == null) {            //O(1) por ser una pregunta y una indexación.
-                ; // suma 1 a la cantidad de significados
 
                 // crea un nuevo nodo
-                Nodo nodoNuevo = new Nodo();                //O(1)??
+                Nodo nodoNuevo = new Nodo();                //O(1) asignación.
                 nodoNuevo.ancestro = actual;               //O(1) asignación.
-                actual.hijos[valorASCII] = nodoNuevo;     //O(1) por ser una pregunta y una indexación.
+                actual.hijos[valorASCII] = nodoNuevo;     //O(1) por ser una asignación e indexación.
             }
             // avanza al siguiente nodo
-            actual = actual.hijos[valorASCII];        //O(1) por ser una pregunta y una indexación.
+            actual = actual.hijos[valorASCII];        //O(1) por ser una asignación e indexación.
             indice++;        //O(1) asignación.
         }
 
         // define el significado como el valor (lo redefine si la clave ya pertenecía)
         actual.significado = valor;         //O(1) asignación.
+
+        //Complejidad = O(|p|)
     }
 
     // método para saber si una palabra pertenece
@@ -121,11 +127,15 @@ public class Trie<T> {
         else {
             return true;
         }
+
+        //Complejidad = O(|p|)
     }
     
     public T obtener(String palabra) {
         // devuelve el significado del nodo final
         return nodoFinal(palabra).significado;     //O(|p|) ya que la función nodoFinal recorre toda la palabra.
+
+        //Complejidad = O(|p|)
     }
 
     private Nodo nodoFinal(String palabra) {
@@ -148,6 +158,8 @@ public class Trie<T> {
             indice ++;                  //O(1) asignación.
         }
         return actual;
+
+        //Complejidad = O(|p|)
     }
 
     // método para eliminar una palabra del trie
@@ -213,28 +225,36 @@ public class Trie<T> {
                 borrados ++;                 //O(1) asignación.
             }
         }
+
+        //Complejidad = O(|p|)
     }
 
     // método privado para contar la cantidad de hijos. 
-    //Al ser comparaciones y recorridos de longitudes acotadas, la complejidad queda en O(1)
+    // Al ser comparaciones y recorridos de longitudes acotadas, la complejidad queda en O(1)
 
     private int cantidadHijos(Nodo nodo) {
         int i = 0;      //O(1) asignación.
         int res = 0;   //O(1) asignación.
 
-        while ( i < nodo.hijos.length ) {     //O(1) ya que recorre un array de 256 posiciones, por lo tanto hace 256 iteraciones y O(256) = O(1)
+        while ( i < nodo.hijos.length ) {      //O(1) ya que recorre un array de 256 posiciones
+                                              //por lo tanto hace 256 iteraciones y O(256) = O(1)
             if (nodo.hijos[i] != null) {     //O(1) por ser una pregunta y una indexación.
                 res ++;     //O(1) asignación.
             }
             i ++;        //O(1) asignación.
         }
         return res;
+
+        //Complejidad = O(1)
     }
 
     // booleano privado que indica si un nodo tiene hijos, finge de reemplazo sintáctico
 
     private boolean tieneHijos(Nodo Nodo){
-        return cantidadHijos(Nodo) > 0;      //O(1) ya que la complejidad de cantidadHijos es O(1) y preguntar si el resultado es mayor a 0 también.
+        return cantidadHijos(Nodo) > 0;      //O(1) ya que la complejidad de cantidadHijos es O(1),
+                                            //y preguntar si el resultado es mayor a 0 también.
+
+        //Complejidad = O(1)
     }
 
     // método que devuelve un array de las claves (son siempre strings) ordenadas lexicográficamente
@@ -253,17 +273,22 @@ public class Trie<T> {
         // donde se iran anotando las letras
         String anotador = "";    //O(1) asignación.
 
-        // recorre los 256 hijos en orden, + 1 caso si no encuentra hijos
-        while (indice < 257) {       //O(1) ya que itera 257 veces, entonces O(257) = O(1)
+        // recorre los 256 hijos en orden, + 1 caso si no encuentra hijos.
+        while (indice < 257) {       //O( Σp∈P (|p|) ) porque va iterando en la lista de los hijos de un nodos hasta
+                                    //encontrar un hijo, después de eso baja a ese hijo y reinicia el indice. Asi,
+                                   //sucesivamente hasta encontrar un significado, por ende, una palabra.
+                                  //Por lo tanto recorre una palabra entera, y luego sube el trie y continua
+                                 //buscando otra palabra. Lo cual deja una complejidad de la suma de todas las 
+                                //palabras del trie.
 
             // si el índice está en rango del arreglo de hijos
-            if (indice < 256) {   //O(1) ya que itera 256 veces, entonces O(256) = O(1)
+            if (indice < 256) {   //O(1) por ser una pregunta.
 
                 // cuando encuentra un hijo no vacio
                 if (actual.hijos[indice] != null) {     //O(1) por ser una pregunta y una indexación.   
 
                     // baja en el Trie
-                    actual = actual.hijos[indice];      //O(1) por ser una asignación e indexación.
+                    actual = actual.hijos[indice];     //O(1) por ser una asignación e indexación.
                     // toma el caracter correspondiente al nodo actual
                     char c = (char) indice;         //O(1) asignación.
                     // resetea el indice para recorrer los hijos del nuevo nodo desde -1
@@ -273,7 +298,7 @@ public class Trie<T> {
                     // inicia un stringBuffer que permite modificar el anotador
                     StringBuffer sb = new StringBuffer(anotador);       //O(1) asignación.
                     // anota una letra
-                    sb.append(c);                                    //O(1) asignación.
+                    sb.append(c);                         //O(|p|) ya que en el peor caso la función recorre toda la palabra.
                     // actualiza el anotador
                     anotador = sb.toString();                     //O(1) asignación.
                     
@@ -287,10 +312,10 @@ public class Trie<T> {
                 }
             }
             // si no encuentra hijo
-            if (indice == 256) { 
+            if (indice == 256) {     //O(1) por ser una pregunta.
 
                 // si no es la raiz
-                if (actual.ancestro != null) {
+                if (actual.ancestro != null) {      //O(1) por ser una pregunta.
 
                     // sube en el Trie
                     actual = actual.ancestro;        //O(1) asignación.
@@ -302,7 +327,7 @@ public class Trie<T> {
                     // inicia un stringBuffer que permite modificar un String
                     StringBuffer sb = new StringBuffer(anotador);        //O(1) asignación.
                     // le borra una letra
-                    sb.deleteCharAt(sb.length() - 1);        //O(1) asignación.
+                    sb.deleteCharAt(sb.length() - 1);       //O(|p|) ya que en el peor caso la función recorre toda la palabra.
                     // actualiza el anotador 
                     anotador = sb.toString();            //O(1) asignación.
                 }
@@ -310,100 +335,112 @@ public class Trie<T> {
             indice ++;          //O(1) asignación.
         }
         return res;
+
+        //Complejidad = O( Σp∈P (|p|) )
     }
 
     // clase privada iterador del Trie, con métodos públicos
 
     private class TrieIterador implements Iterador<T> {
         // donde se iran anotando las letras y formando los nombres
-        private String anotador; 
-
+        private String anotador;          
         // arranca desde la raiz
-        Nodo puntero = raiz; 
+        Nodo puntero = raiz;          
 
         // indica en qué hijo está en el nodo actual (o si no había hijos en caso de valer 256)
-        int indiceHijosPuntero = 0; 
+        int indiceHijosPuntero = 0;         
         // indica cuántos pasos se dió en cada iteración, es para evitar dar más de 1 paso a la vez
-        int cuentaPasos = 0; 
+        int cuentaPasos = 0;           
 
         // booleano que indica si terminó de recorrer el Trie
-        boolean terminoDeIterar = (indiceHijosPuntero == 257);
+        boolean terminoDeIterar = (indiceHijosPuntero == 257);      
         // booleano que indica si el nodo es vacio
-        boolean esVacio = !(tieneHijos(raiz)) && (puntero.ancestro == null);
+        boolean esVacio = !(tieneHijos(raiz)) && (puntero.ancestro == null);     
+
+
 
     public boolean haySiguiente() {
         // hay siguiente si no es vacio o si terminó de iterar
-        return !(terminoDeIterar) || !(esVacio);
+        return !(terminoDeIterar) || !(esVacio);         //O(1) ya que terminoDeIterar es una asignación
+                                                        //y esVacio utiliza tieneHijos,
+                                                       //la cual tiene complejidad O(1).
+        //Complejidad = O(1)
     }
 
     public T siguiente() {
         // notar que en la primer iteración siempre devuelve null
-        T significado = puntero.significado; 
+        T significado = puntero.significado;        //O(1) asignación.
 
         // recorre los 256 hijos en orden,
         // + 1 caso si no encuentra hijos (frena si ya dio un paso)
-        while ( (indiceHijosPuntero < 257) && (cuentaPasos < 1) ) {                                                             
+        while ( (indiceHijosPuntero < 257) && (cuentaPasos < 1) ) {     //O(|p|) ya que se busca la siguiente palabra
+                                                                       //en la busqueda se pueden dar dos casos:
+                                                                      //que baje directamente porque la siguiente
+                                                                     //palabra esta incluida en la actual señalada,
+                                                                    //o que suba a la raiz para buscar la siguiente.                                                        
 
             // si el índice está en rango del arreglo de hijos
-            if (indiceHijosPuntero < 256) { 
+            if (indiceHijosPuntero < 256) {       //O(1) por ser una pregunta.
 
                 // cuando encuentra un hijo no vacio
-                if (puntero.hijos[indiceHijosPuntero] != null) { 
+                if (puntero.hijos[indiceHijosPuntero] != null) {      //O(1) ya que es una pregunta y una indexación.
 
-                    if (anotador == null) {
-                        String nuevoAnotador = "";
-                        anotador = nuevoAnotador;
+                    if (anotador == null) {       //O(1) por ser una pregunta.
+                        String nuevoAnotador = "";          //O(1) asignación.
+                        anotador = nuevoAnotador;          //O(1) asignación.
                     }
                     // toma el caracter correspondiente al nodo actual
-                    char c = (char) indiceHijosPuntero;
+                    char c = (char) indiceHijosPuntero;         //O(1) asignación.
                     // inicia un stringBuffer que permite modificar el anotador
-                    StringBuffer sb = new StringBuffer(anotador); 
+                    StringBuffer sb = new StringBuffer(anotador);          //O(1) asignación.
                     // anota una letra
-                    sb.append(c);
+                    sb.append(c);          //O(|p|) ya que en el peor caso la función recorre toda la palabra.
                     // actualiza el anotador
-                    anotador = sb.toString();
+                    anotador = sb.toString();          //O(1) asignación.
 
                     // baja en el Trie
-                    puntero = puntero.hijos[indiceHijosPuntero]; 
+                    puntero = puntero.hijos[indiceHijosPuntero];      //O(1) por ser una pregunta e indexación.
                     // resetea el indice para recorrer los hijos del nuevo nodo desde -1
-                    indiceHijosPuntero = -1; 
+                    indiceHijosPuntero = -1;             //O(1) asignación.
                     // (al final del while le sumo 1 y empieza desde 0 en el próximo)
                     
                     // si cuando baja encuentra un significado
-                    if (puntero.significado != null) { 
+                    if (puntero.significado != null) {               //O(1) por ser una pregunta.
                         // suma 1 al cuentaPasos, deteniendo la iteración
-                        cuentaPasos ++; 
+                        cuentaPasos ++;         //O(1) asignación.
                     }
                 }
             }
             // si no encuentra hijo
-            if (indiceHijosPuntero == 256) { 
+            if (indiceHijosPuntero == 256) {          //O(1) por ser una pregunta.
 
                 // si no es la raiz
-                if (puntero.ancestro != null) { 
-                    
+                if (puntero.ancestro != null) {           //O(1) por ser una pregunta.
+                     
                     // sube en el Trie
-                    puntero = puntero.ancestro; 
+                    puntero = puntero.ancestro;            //O(1) asignación.
 
                     // obtiene la última letra
-                    char c = anotador.charAt(anotador.length() - 1); 
+                    char c = anotador.charAt(anotador.length() - 1);            //O(1) asignación.
                     // iguala el indice al valor ASCII de c, asi sigue recorriendo desde donde se había quedado en el nodo anterior
-                    indiceHijosPuntero = c; 
+                    indiceHijosPuntero = c;             //O(1) asignación.
                     
                     // inicia un stringBuffer que permite modificar un String
-                    StringBuffer sb = new StringBuffer(anotador); 
+                    StringBuffer sb = new StringBuffer(anotador);             //O(1) asignación.
                     // le borra una letra
-                    sb.deleteCharAt(sb.length() - 1); 
+                    sb.deleteCharAt(sb.length() - 1);         //O(|p|) ya que en el peor caso la función recorre toda la palabra.
                     // actualiza el anotador
-                    anotador = sb.toString();
+                    anotador = sb.toString();            //O(1) asignación.
                 }
             } 
         // llega a valer 257 solo si no encuentra más hijos y está en la raiz, es decir, si termina de iterar
-        indiceHijosPuntero ++;
+        indiceHijosPuntero ++;             //O(1) asignación.
         }
         // resetea el cuenta pasos para que inicie desde 0 en la próxima iteración
-        cuentaPasos = 0; 
+        cuentaPasos = 0;                //O(1) asignación.
         return significado;
+
+        //Complejidad = O(|p|)
     }
 
     public String nombreActual(){
@@ -417,9 +454,8 @@ public class Trie<T> {
         throw new UnsupportedOperationException("Método no implementado aún");	
     }
     
-    // dejamos las funciones "hayAnterior" y "Anterior" sin implementar porque no la sibamos a usar en ninguna otra clase,
-    // solo necesitabamos el método "siguiente"
-    
+    // dejamos las funciones "hayAnterior" y "Anterior" sin implementar 
+    // porque no las ibamos a usar en ninguna otra clase, solo necesitabamos el método "siguiente"
     }
 
 
